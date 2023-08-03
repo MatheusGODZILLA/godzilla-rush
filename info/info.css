@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Godzilla';
+    src: url('./font/Godzilla.ttf') format('woff'); 
+}
+
+
+body {
+    background-color: bisque;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+}
+
+.container row-reverse{
+    padding: 0 1rem;
+}
+
+.logo {
+    height: 210px;
+}
+
+.button {
+    background-color: rgb(23, 114, 252);
+    border: 3px solid rgb(5, 6, 7);
+    color: #fff;
+    display: block;
+    font-size: 1.25rem;
+    font-weight: lighter;
+    padding: .75rem 1rem;
+    max-width: 14rem;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 5px;
+    font-family: 'Godzilla', sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px black;
+    margin-left: 1rem;
+}
+
+.center-button {
+    display: flex;
+    justify-content: center;
+}
+
+.home-section {
+    padding-right: 0;
+}
+
+.home-section p {
+    font-size: 1.25rem;
+    padding-right: 1.25rem;
+}
+
+.home-section .button {
+    position: relative;
+}
+
+.copyright {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.about {
+    width: 900px;
+}
