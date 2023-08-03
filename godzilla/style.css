@@ -244,3 +244,78 @@ audio {
     letter-spacing: 2px;
     font-size: 1.25rem;
 }
+
+/* Trabalhando animações */
+@keyframes pipe-animation {
+    from {
+        right: -80px;
+    }
+
+    to {
+        right: 100%;
+    }
+}
+
+@keyframes jump {
+    0% {
+        bottom: 0;
+    }
+
+    40% {
+        bottom: 320px;
+    }
+
+    50% {
+        bottom: 320px;
+    }
+
+    60% {
+        bottom: 270px;
+    }
+
+    100% {
+        bottom: 0;
+    }
+}
+
+@keyframes plane-animation {
+    from {
+        right: -600px;
+    }
+
+    to {
+        right: 100%;
+    }
+}
+
+@keyframes ships-animation {
+    from {
+        left: -600px;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+@keyframes clouds-animation {
+    from {
+        right: -300px;
+    }
+
+    to {
+        right: 100%;
+    }
+}
+
+@keyframes move-background {
+    0% {
+        background-position: 0;
+    }
+    50% {
+        background-position: 100%;
+    }
+    100% {
+        background-position: 200%;
+    }
+}
