@@ -13,3 +13,45 @@ body {
     background: bisque;
     padding: 0 1rem;  
 }
+
+/* Trabalhando o cabeçário da página do joguinho */
+header {
+    border-color: black;
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente todo o conteúdo */
+    align-items: center; /* Centraliza verticalmente todo o conteúdo */
+}
+
+.header-content {
+    display: flex; /* Criar um flex container para o logotipo e a nav */
+    align-items: center; /* Centraliza verticalmente logotipo e nav */
+}
+
+header img {
+    margin: 1rem;
+    width: 200px;
+}
+
+header nav {
+    margin-left: 1rem; /* Adicione margem à esquerda para separar o logo dos botões */
+}
+
+nav a {
+    background-color: rgb(23, 114, 252);
+    border: 3px solid rgb(5, 6, 7);
+    color: #fff;
+    font-size: 1.25rem;
+    padding: .75rem 1rem;
+    max-width: fit-content;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 5px;
+    margin-right: 0.5rem; /* Adicione margem à direita para separar os botões */
+    font-family: 'Godzilla', sans-serif;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px black;
+}
