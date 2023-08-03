@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Godzilla';
+    src: url('./font/Godzilla.ttf') format('woff'); 
+}
+
+body {
+    background: bisque;
+    padding: 0 1rem;  
+}
