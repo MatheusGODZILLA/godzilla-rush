@@ -10,12 +10,12 @@ Vale lembrar que todos os direitos sobre o icônico Godzilla e seus personagens 
 
 Links e referências de materiais/elementos que usei na composição do game-board:
 - Como criar um jogo SIMPLES usando JavaScript e HTML | JavaScript para iniciantes - Tutorial (Manual do Dev):
-  https://www.youtube.com/watch?v=r9buAwVBDhA
+  - https://www.youtube.com/watch?v=r9buAwVBDhA
 - Sons usados no projeto:
-  https://downloads.khinsider.com/game-soundtracks/album/godzilla-kaijuu-daikessen-snes
-  https://www.sounds-resource.com/nes/godzillamonsterofmonsters/sound/4004/
+  - https://downloads.khinsider.com/game-soundtracks/album/godzilla-kaijuu-daikessen-snes
+  - https://www.sounds-resource.com/nes/godzillamonsterofmonsters/sound/4004/
 - Sprites e animações:
-  https://mugenarchive.com/forums/downloads.php?do=file&id=15249-godzilla-dr-t
-  https://scratch.mit.edu/projects/348871879
+  - https://mugenarchive.com/forums/downloads.php?do=file&id=15249-godzilla-dr-t
+  - https://scratch.mit.edu/projects/348871879
 
 GODZILLA and its related characters property of TOHO CO., LTD.
