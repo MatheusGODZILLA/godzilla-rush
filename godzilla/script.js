@@ -175,3 +175,18 @@ const loop = setInterval(() => {
         clearInterval(loop);
     }
 }, 10);
+
+// Variável de reiniciar o jogo 
+const restartGame = () => {
+    // Limpar o intervalo do loop principal
+    clearInterval(loop);
+
+    // Redirecionar para a mesma página para recarregar o jogo
+    window.location.reload();
+};
+
+// Associar a função ao botão de reinício
+restart.addEventListener('click', restartGame);
+
+// Atualiza o highscore
+updateHighscore();
