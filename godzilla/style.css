@@ -164,3 +164,38 @@ nav a {
     bottom: 120px;
     z-index: 0; 
 }
+
+/* Trabalhando o score-board */
+.score-board {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    align-items: center;
+}
+
+.icon {
+    display: none;
+    width: 80px;
+    margin-left: 15px;
+    z-index: 2;
+}
+
+.score, .highscore {
+    display: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: .5rem 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: 'Godzilla', sans-serif;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    z-index: 1;
+}
+
+.score-column {
+    display: flex;
+    flex-direction: column;
+}
