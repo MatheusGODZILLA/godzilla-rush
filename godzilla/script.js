@@ -27,3 +27,15 @@ let isGameOver = false; // Variável para controlar o estado do jogo
 let isGameStarted = false; // Variável para controlar se o jogo foi iniciado
 
 rush.play(); // Toca a melodia de início da corrida
+
+// Trabalhando o sistema de pontuação
+let score = 0;
+let highscore = localStorage.getItem('highscore') || 0; // Pega o highscore atual da local storage ou define como 0 se não houver
+
+// Função para atualizar o highscore
+const updateHighscore = () => {
+    if (score > highscore) {
+        localStorage.setItem('highscore', score); // Atualiza o highscore se o score atual for maior
+    }
+    document.getElementById('highscore').textContent = localStorage.getItem('highscore'); // Exibe o highscore na página
+};
