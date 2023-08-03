@@ -114,3 +114,64 @@ startButton.addEventListener('click', () => {
     // Inicie o loop principal do jogo
     loop();
 });
+
+// Variável de loop que contém o funcionamento principal do joguinho => Função + tempo em milissegundos
+const loop = setInterval(() => {
+
+    if (!isGameStarted) {
+        return; // Se o jogo não foi iniciado, não executa o loop
+    }
+    
+    // Atribuindo às variáveis os valores da posições dos componentes do game-board no momento da partida
+    const pipePosition = pipe.offsetLeft;
+    const kaijuPosition = Number(window.getComputedStyle(kaiju).bottom.replace('px', ''));
+    const cloudsPosition = clouds.offsetLeft;
+    const planePosition = plane.offsetLeft;
+    const superXPosition = superX.offsetLeft;
+    const gotengoPosition = gotengo.offsetLeft;
+
+    // Estrutura responsável por definir as condições de game-over e interromper o fluxo de animações quando o jogador colide com o pipe
+    if (pipePosition <= 200 && pipePosition > 0 && kaijuPosition < 65) {
+
+        // Define o estado de "game-over"
+        isGameOver = true;
+        
+        pipe.style.animation = 'none';
+        pipe.style.left = `${pipePosition}px`;
+
+        kaiju.style.animation = 'none';
+        kaiju.style.bottom = `${kaijuPosition}px`;
+
+        clouds.style.animation = 'none';
+        clouds.style.left = `${cloudsPosition}px`;
+
+        plane.style.animation = 'none';
+        plane.style.left = `${planePosition}px`;
+
+        superX.style.animation = 'none';
+        superX.style.left = `${superXPosition}px`;
+
+        gotengo.style.animation = 'none';
+        gotengo.style.left = `${gotengoPosition}px`;
+
+        kaiju.src = './img/game-over.png';
+        kaiju.style.width = '300px'
+
+        // Manipulando a exibição da mensagem "PERDEU!" e do botão de reinicio
+        restart.style.display = 'block';
+        perdeu.style.display = 'block';
+
+        // Interrompe o som do caminhado, toca os sons de colisão e a melodia de game-over
+        somAndando.pause();
+        bgm.pause();
+        gameover.play();
+        collide.play();
+        pain.play();
+
+        // Atualiza o highscore após perder a partida
+        updateHighscore();
+
+        // Limpa o intervalo do loop
+        clearInterval(loop);
+    }
+}, 10);
