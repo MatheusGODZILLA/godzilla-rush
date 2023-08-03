@@ -39,3 +39,24 @@ const updateHighscore = () => {
     }
     document.getElementById('highscore').textContent = localStorage.getItem('highscore'); // Exibe o highscore na página
 };
+
+// Variável que executa a ação e a animação de pular juntamente com os seus respectivos sons (pulo e queda)
+const jump = () => {
+    if (!isGameOver) { // Verifica se o jogo ainda está em execução
+        kaiju.classList.add('jump');
+        fly.play();
+
+        setTimeout(() => {
+            kaiju.classList.remove('jump');
+            fall.play();
+            if (!isGameOver){
+                score += 10; // Adiciona 10 pontos por cada pulo bem sucedido
+                document.getElementById('score').textContent = score; // Atualiza a pontuação
+            } else {
+                score += 0; // Não adiciona pontos em caso de falha
+                document.getElementById('score').textContent = score;
+            }
+            updateHighscore(); // Atualiza o highscore ao final
+        }, 500);
+    }
+}
