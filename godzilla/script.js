@@ -60,3 +60,57 @@ const jump = () => {
         }, 500);
     }
 }
+
+// Pausar todas as animações antes da partida iniciar
+pipe.style.animationPlayState = 'paused';
+pipe.style.display = 'none';
+kaiju.style.animationPlayState = 'paused';
+clouds.style.animationPlayState = 'paused';
+clouds.style.display = 'none';
+plane.style.animationPlayState = 'paused';
+superX.style.animationPlayState = 'paused';
+gotengo.style.animationPlayState = 'paused';
+kaiju.src = './img/stop.gif';
+kaiju.style.width = '280px'
+
+// Função para iniciar todas as animações
+const resumeAnimations = () => {
+    pipe.style.animationPlayState = 'running';
+    pipe.style.display = 'block';
+    kaiju.style.animationPlayState = 'running';
+    clouds.style.animationPlayState = 'running';
+    clouds.style.display = 'block';
+    plane.style.animationPlayState = 'running';
+    superX.style.animationPlayState = 'running';
+    gotengo.style.animationPlayState = 'running';
+    somAndando.play(); // Reprodução do som do caminhado do Kaiju
+    kaiju.src = './img/godzilla.gif'; // Animação do Kaiju
+
+    icon.style.display = 'block';
+    scores.style.display = 'block';
+    highscores.style.display = 'block';
+    
+    // Adiciona o ouvinte de evento para o salto
+    document.addEventListener('keydown', jump);
+    document.addEventListener('touchstart', jump);
+}
+
+startButton.addEventListener('click', () => {
+    // Esconde a tela de início
+    beginContainer.style.display = 'none';
+    
+    // Mostra o tabuleiro do jogo
+    gameBoard.style.display = 'block';
+
+    // Marca o jogo como iniciado
+    isGameStarted = true;
+    
+    // Carrega as animações
+    resumeAnimations();
+
+    // Toca a música de fundo
+    bgm.play();
+    
+    // Inicie o loop principal do jogo
+    loop();
+});
