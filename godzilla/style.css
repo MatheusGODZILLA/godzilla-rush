@@ -199,3 +199,48 @@ nav a {
     display: flex;
     flex-direction: column;
 }
+
+.begin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.start-button {
+    background-color: rgb(23, 114, 252);
+    border: 3px solid rgb(5, 6, 7);
+    color: #fff;
+    font-size: 1.5rem;
+    padding: .75rem 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 5px;
+    font-family: 'Godzilla', sans-serif;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px black;
+    z-index: 5;
+    cursor: pointer;
+}
+
+audio {
+    width: 300px;
+    height: 50px;
+    background-color: #f2f2f2;
+    color: #333;
+    border-radius: 10px;
+    text-align: center;
+}
+  
+.copyright {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-transform: uppercase;
+    font-family: 'Godzilla', sans-serif;
+    font-weight: normal;
+    letter-spacing: 2px;
+    font-size: 1.25rem;
+}
