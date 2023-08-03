@@ -319,3 +319,61 @@ audio {
         background-position: 200%;
     }
 }
+
+/* Trabalhando responsividade */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    nav a {
+        font-size: 1rem;
+        padding: .5rem .75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-board {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .perdeu {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .restart-button {
+        font-size: 1rem;
+        padding: .5rem .75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pipe {
+        width: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .kaiju {
+        width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .clouds,
+    .plane {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .copyright {
+        justify-content: center;
+    }
+}
