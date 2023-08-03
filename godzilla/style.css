@@ -55,3 +55,112 @@ nav a {
     letter-spacing: 2px;
     text-shadow: 2px 2px 4px black;
 }
+
+/* Trabalhando o game-board e seus componentes */
+.game-board {
+    width: 100%;
+    height: 580px;
+    border-bottom: 0px solid #2b362d;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 23px;
+    background-image: url('./img/bg2.png');
+    background-size: auto;
+    background-position: center;
+    /* animation: move-background 60s linear infinite; */
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.perdeu {
+    width: 700px;
+    margin: 10px;
+    display: none;
+    z-index: 4;
+}
+
+.restart-button {
+    display: none;
+    background-color: rgb(23, 114, 252);
+    border: 3px solid rgb(5, 6, 7);
+    color: #fff;
+    font-size: 1.5rem;
+    padding: .75rem 1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 5px;
+    font-family: 'Godzilla', sans-serif;
+    font-weight: lighter;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px black;
+    z-index: 5;
+    cursor: pointer;
+}
+
+.pipe {
+   position: absolute;
+   bottom: 0;
+   width: 65px;
+   /* left: 200px; */ 
+   animation: pipe-animation 1.75s infinite linear;
+   z-index: 3;
+}
+
+.sea {
+    position: absolute;
+    bottom: 0; 
+    width: 100%;
+    height: 250px;
+    z-index: 4;
+}
+
+.kaiju {
+    width: 250px;
+    position: absolute;
+    bottom: 0;
+    z-index: 3;
+}
+
+.jump {
+    animation: jump 500ms ease-out;
+}
+
+.clouds {
+    position: absolute;
+    width: 300px;
+    top: 30px;
+    animation: clouds-animation 20s infinite linear;
+    z-index: 0;
+}
+
+.plane {
+    position: absolute;
+    width: 200px;
+    top: 10px;
+    animation: plane-animation 50s infinite linear;
+    z-index: 0; 
+}
+
+.superX {
+    position: absolute;
+    width: 100px;
+    top: 30px;
+    animation: plane-animation 30s infinite linear;
+    z-index: 1; 
+}
+
+.gotengo {
+    position: absolute;
+    width: 300px;
+    animation: ships-animation 40s infinite linear;
+    bottom: 120px;
+    z-index: 0; 
+}
