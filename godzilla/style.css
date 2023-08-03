@@ -59,7 +59,7 @@ nav a {
 /* Trabalhando o game-board e seus componentes */
 .game-board {
     width: 100%;
-    height: 580px;
+    height: 75vh;
     border-bottom: 0px solid #2b362d;
     margin: 0 auto;
     position: relative;
@@ -67,7 +67,7 @@ nav a {
     position: relative;
     margin-bottom: 23px;
     background-image: url('./img/bg2.png');
-    background-size: auto;
+    background-size: cover;
     background-position: center;
     /* animation: move-background 60s linear infinite; */
 }
@@ -375,5 +375,11 @@ audio {
 @media (max-width: 768px) {
     .copyright {
         justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-board {
+        height: 30vh; 
     }
 }
