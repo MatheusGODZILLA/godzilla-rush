@@ -3,24 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GODZILLA-RUSH</title>
+    <title>GODZILLA-RUSH - Início</title>
+    <!-- Importando as mesmas fontes do jogo para coesão visual -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="inicio.css">
 </head>
 <body>
-    <section class="home-section">
-        <p><strong>Desenvolvido por Matheus da Silva</strong></p> 
-        <div class="container row-reverse">
-            <img src="img/logo.png" alt="logo" class="logo">
-            <div>
-                <h1>Saudações, soldado!</h1>
-                <p><strong>Prepare-se para a corrida!</strong></p>
-                <div class="center-button">
-                    <a href="./godzilla/" class="button" id="meuBotao1">Jogar</a>
-                    <a href="./info/info.html" class="button" id="meuBotao2">Sobre o projeto</a>
+    <div class="arcade-wrapper">
+        <div class="crt-scanlines"></div>
+        
+        <section class="home-section">
+            <!-- Créditos do Desenvolvedor estilo Terminal -->
+            <div class="dev-credits">
+                <p>SISTEMA INICIALIZADO</strong></p> 
+            </div>
+            
+            <div class="container row-reverse">
+                <img src="img/logo.png" alt="GODZILLA-RUSH Logo" class="logo">
+                
+                <div class="briefing-panel">
+                    <h1>SAUDAÇÕES, SOLDADO!</h1>
+                    <p class="mission-text">PREPARE-SE PARA A CORRIDA DE SOBREVIVÊNCIA.</p>
+                    
+                    <div class="center-button">
+                        <a href="./godzilla/" class="btn-retro pulse-btn" id="meuBotao1">INICIAR MISSÃO</a>
+                        <a href="./info/info.html" class="btn-retro secondary-btn" id="meuBotao2">SOBRE O PROJETO</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <p class="copyright"><strong><i>GODZILLA</i> and its related characters property of <i>TOHO CO., LTD</i>.</strong></p>
-    </section>
+            
+            <p class="copyright"><strong><i>GODZILLA</i> AND ITS RELATED CHARACTERS PROPERTY OF <i>TOHO CO., LTD</i>.</strong></p>
+        </section>
+    </div>
 </body>
 </html>
