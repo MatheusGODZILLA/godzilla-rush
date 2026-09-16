@@ -1,192 +1,207 @@
-// Atribuindo às variáveis os elementos que serão funcionais/interativos no joguinho
+// Captura de Elementos-Chave
 const kaiju = document.querySelector('.kaiju');
 const pipe = document.querySelector('.pipe');
 const clouds = document.querySelector('.clouds');
-const restart = document.querySelector('.restart-button');
+const restartButton = document.getElementById('restart-button');
 const startButton = document.getElementById('start-button');
-const beginContainer = document.querySelector('.begin');
+const startScreen = document.getElementById('start-screen');
+const gameOverScreen = document.getElementById('game-over-screen');
 const gameBoard = document.querySelector('.game-board');
-const perdeu = document.querySelector('.perdeu');
+
+// Elementos Secundários de Fundo
 const plane = document.querySelector('.plane');
 const superX = document.querySelector('.superX');
 const gotengo = document.querySelector('.gotengo');
+
+// HUD
 const icon = document.querySelector('.icon');
 const scores = document.querySelector('.score');
 const highscores = document.querySelector('.highscore');
+const scoreBoard = document.querySelector('.score-board');
+
+// Áudios do Jogo
 const somAndando = document.getElementById("somAndando");
 const gameover = document.getElementById("gameover");
 const collide = document.getElementById("collide");
 const fly = document.getElementById("fly");
 const fall = document.getElementById("fall");
 const pain = document.getElementById("pain");
-const record = document.getElementById("record");
 const bgm = document.getElementById("bgm");
 const rush = document.getElementById("rush");
 
-let isGameOver = false; // Variável para controlar o estado do jogo
-let isGameStarted = false; // Variável para controlar se o jogo foi iniciado
-
-rush.play(); // Toca a melodia de início da corrida
-
-// Trabalhando o sistema de pontuação
+// Estado do Jogo
+let isGameOver = false;
+let isGameStarted = false;
+let loopId;
 let score = 0;
-let highscore = localStorage.getItem('highscore') || 0; // Pega o highscore atual da local storage ou define como 0 se não houver
+let highscore = localStorage.getItem('highscore') || 0;
+let baseSpeed = 1.6; // Tempo de animação inicial do obstáculo (segundos)
 
-// Função para atualizar o highscore
+// Sistema de Placar Formatado
+const formatScore = (num) => String(num).padStart(4, '0');
+
 const updateHighscore = () => {
     if (score > highscore) {
-        localStorage.setItem('highscore', score); // Atualiza o highscore se o score atual for maior
+        highscore = score;
+        localStorage.setItem('highscore', score);
     }
-    document.getElementById('highscore').textContent = localStorage.getItem('highscore'); // Exibe o highscore na página
+    document.getElementById('highscore').textContent = formatScore(highscore);
 };
 
-// Variável que executa a ação e a animação de pular juntamente com os seus respectivos sons (pulo e queda)
-const jump = () => {
-    if (!isGameOver) { // Verifica se o jogo ainda está em execução
+// Mecânica do Pulo
+const jump = (event) => {
+    // Teclas aceitas: Espaço (Space) ou Seta pra Cima (ArrowUp) ou cliques no mobile
+    if (event && event.type === 'keydown' && event.code !== 'Space' && event.code !== 'ArrowUp') return;
+    
+    // Evita ação fora de jogo ou duplo-pulo consecutivo
+    if (!isGameOver && isGameStarted) {
+        if (kaiju.classList.contains('jump')) return;
+
         kaiju.classList.add('jump');
-        fly.play();
+        fly.currentTime = 0;
+        fly.play().catch(() => {});
 
         setTimeout(() => {
             kaiju.classList.remove('jump');
-            fall.play();
-            if (!isGameOver){
-                score += 10; // Adiciona 10 pontos por cada pulo bem sucedido
-                document.getElementById('score').textContent = score; // Atualiza a pontuação
-            } else {
-                score += 0; // Não adiciona pontos em caso de falha
-                document.getElementById('score').textContent = score;
+            if (!isGameOver) {
+                fall.currentTime = 0;
+                fall.play().catch(() => {});
+                score += 10;
+                document.getElementById('score').textContent = formatScore(score);
+                
+                // Adaptação de Dificuldade: Acelera o obstáculo levemente a cada 50 pontos
+                if (score % 50 === 0) {
+                    increaseDifficulty();
+                }
             }
-            updateHighscore(); // Atualiza o highscore ao final
-        }, 500);
+            updateHighscore();
+        }, 520);
     }
-}
+};
 
-// Pausar todas as animações antes da partida iniciar
-pipe.style.animationPlayState = 'paused';
-pipe.style.display = 'none';
-kaiju.style.animationPlayState = 'paused';
-clouds.style.animationPlayState = 'paused';
-clouds.style.display = 'none';
-plane.style.animationPlayState = 'paused';
-superX.style.animationPlayState = 'paused';
-gotengo.style.animationPlayState = 'paused';
-kaiju.src = './img/stop.gif';
-kaiju.style.width = '280px'
+// Progressão de Dificuldade (Gameplay interessante!)
+const increaseDifficulty = () => {
+    const nextSpeed = Math.max(0.7, baseSpeed - (score * 0.0015));
+    pipe.style.animationDuration = `${nextSpeed}s`;
+};
 
-// Função para iniciar todas as animações
+// Configurações e Preparo Pré-Jogo
+const initPrematch = () => {
+    pipe.style.animationPlayState = 'paused';
+    pipe.style.display = 'none';
+    kaiju.style.animationPlayState = 'paused';
+    clouds.style.animationPlayState = 'paused';
+    clouds.style.display = 'none';
+    plane.style.animationPlayState = 'paused';
+    superX.style.animationPlayState = 'paused';
+    gotengo.style.animationPlayState = 'paused';
+    
+    kaiju.src = './img/stop.gif';
+    kaiju.style.width = '190px'; // Tamanho padronizado
+
+    // Inicializa placares ocultos
+    updateHighscore();
+};
+
 const resumeAnimations = () => {
     pipe.style.animationPlayState = 'running';
     pipe.style.display = 'block';
+    
     kaiju.style.animationPlayState = 'running';
+    kaiju.src = './img/godzilla.gif';
+
     clouds.style.animationPlayState = 'running';
     clouds.style.display = 'block';
+
     plane.style.animationPlayState = 'running';
     superX.style.animationPlayState = 'running';
     gotengo.style.animationPlayState = 'running';
-    somAndando.play(); // Reprodução do som do caminhado do Kaiju
-    kaiju.src = './img/godzilla.gif'; // Animação do Kaiju
+    
+    somAndando.play().catch(() => {});
 
+    // Ativa HUD
+    scoreBoard.style.display = 'flex';
     icon.style.display = 'block';
     scores.style.display = 'block';
     highscores.style.display = 'block';
     
-    // Adiciona o ouvinte de evento para o salto
+    // Listeners
     document.addEventListener('keydown', jump);
     document.addEventListener('touchstart', jump);
-}
+};
 
-startButton.addEventListener('click', () => {
-    // Esconde a tela de início
-    beginContainer.style.display = 'none';
-    
-    // Mostra o tabuleiro do jogo
-    gameBoard.style.display = 'block';
+// Loop de Jogo Principal (Refatorado & Sem Stuttering)
+const gameLoop = () => {
+    if (!isGameStarted) return;
 
-    // Marca o jogo como iniciado
-    isGameStarted = true;
-    
-    // Carrega as animações
-    resumeAnimations();
-
-    // Toca a música de fundo
-    bgm.play();
-    
-    // Inicie o loop principal do jogo
-    loop();
-});
-
-// Variável de loop que contém o funcionamento principal do joguinho => Função + tempo em milissegundos
-const loop = setInterval(() => {
-
-    if (!isGameStarted) {
-        return; // Se o jogo não foi iniciado, não executa o loop
-    }
-    
-    // Atribuindo às variáveis os valores da posições dos componentes do game-board no momento da partida
     const pipePosition = pipe.offsetLeft;
     const kaijuPosition = Number(window.getComputedStyle(kaiju).bottom.replace('px', ''));
-    const cloudsPosition = clouds.offsetLeft;
-    const planePosition = plane.offsetLeft;
-    const superXPosition = superX.offsetLeft;
-    const gotengoPosition = gotengo.offsetLeft;
 
-    // Estrutura responsável por definir as condições de game-over e interromper o fluxo de animações quando o jogador colide com o pipe
-    if (pipePosition <= 200 && pipePosition > 0 && kaijuPosition < 65) {
-
-        // Define o estado de "game-over"
+    // Detecção Fina de Colisão (Hitbox ajustada para melhor gameplay!)
+    // O cano/obstáculo precisa estar entre 45px e 200px da esquerda e o Kaiju abaixo de 68px de altura
+    if (pipePosition <= 200 && pipePosition > 45 && kaijuPosition < 68) {
         isGameOver = true;
         
+        // Tremor de tela dramático ao colidir
+        gameBoard.classList.add('shake');
+
+        // Congela movimentos na hora
         pipe.style.animation = 'none';
         pipe.style.left = `${pipePosition}px`;
-
         kaiju.style.animation = 'none';
         kaiju.style.bottom = `${kaijuPosition}px`;
-
-        clouds.style.animation = 'none';
-        clouds.style.left = `${cloudsPosition}px`;
-
-        plane.style.animation = 'none';
-        plane.style.left = `${planePosition}px`;
-
-        superX.style.animation = 'none';
-        superX.style.left = `${superXPosition}px`;
-
-        gotengo.style.animation = 'none';
-        gotengo.style.left = `${gotengoPosition}px`;
+        
+        // Ativa classe no container para aplicar blur & opacidade nos secundários via CSS (combate a aglomeração)
+        gameBoard.classList.add('game-over');
 
         kaiju.src = './img/game-over.png';
-        kaiju.style.width = '300px'
+        kaiju.style.width = '200px';
 
-        // Manipulando a exibição da mensagem "PERDEU!" e do botão de reinicio
-        restart.style.display = 'block';
-        perdeu.style.display = 'block';
+        // Mostra a Overlay de GameOver e oculta elementos dinâmicos
+        gameOverScreen.style.display = 'flex';
 
-        // Interrompe o som do caminhado, toca os sons de colisão e a melodia de game-over
+        // Sons & Músicas de Derrota
         somAndando.pause();
         bgm.pause();
-        gameover.play();
-        collide.play();
-        pain.play();
+        
+        gameover.currentTime = 0;
+        collide.currentTime = 0;
+        pain.currentTime = 0;
+        
+        gameover.play().catch(() => {});
+        collide.play().catch(() => {});
+        pain.play().catch(() => {});
 
-        // Atualiza o highscore após perder a partida
         updateHighscore();
-
-        // Limpa o intervalo do loop
-        clearInterval(loop);
+        cancelAnimationFrame(loopId);
+        return;
     }
-}, 10);
 
-// Variável de reiniciar o jogo 
+    loopId = requestAnimationFrame(gameLoop);
+};
+
+// Iniciar Partida
+startButton.addEventListener('click', () => {
+    startScreen.style.display = 'none';
+    isGameStarted = true;
+    
+    resumeAnimations();
+    
+    bgm.volume = 0.55;
+    bgm.play().catch(() => {});
+    rush.pause(); 
+    
+    // Começa Loop Sincronizado
+    loopId = requestAnimationFrame(gameLoop);
+});
+
+// Reinício Rápido
 const restartGame = () => {
-    // Limpar o intervalo do loop principal
-    clearInterval(loop);
-
-    // Redirecionar para a mesma página para recarregar o jogo
+    cancelAnimationFrame(loopId);
     window.location.reload();
 };
 
-// Associar a função ao botão de reinício
-restart.addEventListener('click', restartGame);
+restartButton.addEventListener('click', restartGame);
 
-// Atualiza o highscore
-updateHighscore();
+// Executa Preparo
+initPrematch();

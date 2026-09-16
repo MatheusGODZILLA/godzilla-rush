@@ -4,50 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>On Rush - GODZILLA-RUSH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <img src="./img/logo.png" alt="Logo" class="logo">
-            <nav>
-                <a href="../index.html" class="inicio" id="meuBotao1">Inicio</a>
-                <!-- <a href="../menu/" class="kaijus">Kaijus</a> -->
-                <a href="../info/info.html" class="info" id="meuBotao2">Sobre o projeto</a>
-            </nav>
-        </div>
-        
-        <audio id="bgm" loop controls>
-            <source src="./sounds/Raging Waters.mp3" type="audio/mpeg">
-        </audio>
-    </header>
-    <div class="game-board">
-        <img src="./img/godzilla.gif" class="kaiju">
-        <img src="./img/pipe.png" class="pipe">
-        <img src="./img/clouds.png" class="clouds">
-        <img src="./img/mothra92.gif" class="plane">
-        <img src="./img/super X2.png" class="superX">
-        <img src="./img/sea.png" class="sea">
-        <img src="./img/gotengo (2).png" class="gotengo">
-        <div class="score-board">
-            <img src="./img/Godzilla-icon.jpg" class="icon">
-            <div class="score-column">
-                <p class="score">SCORE: <span id="score">0</span></p>
-                <p class="highscore">HIGHSCORE: <span id="highscore">0</span></p>
+    <!-- Overlay do Fliperama / Container do Jogo -->
+    <div class="arcade-wrapper">
+        <header>
+            <div class="header-content">
+                <img src="./img/logo.png" alt="Logo" class="logo">
+                <nav>
+                    <a href="../index.html" class="inicio">Inicio</a>
+                    <a href="../info/info.html" class="info">Sobre</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Tabuleiro do Jogo com Filtro de Scanlines CRT -->
+        <div class="game-board">
+            <div class="crt-scanlines"></div>
+            
+            <!-- Cenários & Objetos -->
+            <img src="./img/godzilla.gif" class="kaiju" alt="Godzilla">
+            <img src="./img/pipe.png" class="pipe" alt="Obstáculo">
+            <img src="./img/clouds.png" class="clouds" alt="Nuvens">
+            <img src="./img/mothra92.gif" class="plane" alt="Mothra">
+            <img src="./img/super X2.png" class="superX" alt="Super X2">
+            <img src="./img/sea.png" class="sea" alt="Mar">
+            <img src="./img/gotengo (2).png" class="gotengo" alt="Gotengo">
+
+            <!-- HUD de Pontuação (Militar/Cyber) -->
+            <div class="score-board">
+                <img src="./img/Godzilla-icon.jpg" class="icon" alt="Ícone Godzilla">
+                <div class="score-column">
+                    <p class="score">SCORE: <span id="score">0000</span></p>
+                    <p class="highscore">HIGH: <span id="highscore">0000</span></p>
+                </div>
+            </div>
+
+            <!-- Overlay de Início -->
+            <div class="overlay-screen begin" id="start-screen">
+                <img src="./img/preparado.png" class="ready" alt="Preparado?">
+                <button class="btn-retro" id="start-button">INICIAR MISSÃO</button>
+            </div>
+
+            <!-- Overlay de Fim de Jogo (Sem aglomeração!) -->
+            <div class="overlay-screen game-over-overlay" id="game-over-screen">
+                <div class="defeat-banner">
+                    <img src="./img/perdeu.png" class="perdeu" alt="PERDEU">
+                    <p class="cause-text">O KAIJU FOI DETIDO POR FORÇAS MILITARES</p>
+                </div>
+                <button class="btn-retro pulse-btn" id="restart-button">REENTRAR NA LUTA</button>
             </div>
         </div>
-        <div class="button-container">
-            <img src="./img/perdeu.png" class="perdeu">
-            <button class="restart-button" id="meuBotao">Reiniciar</button>
-            <div class="begin">
-                <img src="./img/preparado.png" class="ready">
-                <button class="start-button" id="start-button">Iniciar</button>
-            </div>
-        </div>
+
+        <footer>
+            <p class="copyright">Comando: <span class="highlight">QUALQUER TECLA / TOQUE NA TELA</span> para Pular</p>
+        </footer>
     </div>
-    <p p class="copyright"><strong>Modo de jogar: pressione qualquer tecla para pular</strong></p>
-    <!-- <p class="copyright"><strong>GODZILLA and its related characters property of TOHO CO., LTD.</strong></p> -->
+
+    <!-- Áudios do Jogo -->
+    <audio id="bgm" loop>
+        <source src="./sounds/Raging Waters.mp3" type="audio/mpeg">
+    </audio>
     <audio id="somAndando" loop>
         <source src="./sounds/godzilla_step.wav" type="audio/mpeg">
     </audio>

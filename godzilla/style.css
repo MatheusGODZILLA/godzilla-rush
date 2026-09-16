@@ -4,195 +4,228 @@
     box-sizing: border-box;
 }
 
+:root {
+    --atomic-blue: #00e5ff;
+    --dark-bg: #030307;
+    --panel-border: rgba(0, 229, 255, 0.4);
+    --panel-bg: rgba(7, 12, 25, 0.85);
+    --danger-red: #ff3344;
+    --laser-green: #39ff14;
+    --text-primary: #e0f7fc;
+    --font-cyber: 'Orbitron', sans-serif;
+    --font-retro: 'Press Start 2P', cursive;
+}
+
 @font-face {
     font-family: 'Godzilla';
     src: url('../font/Godzilla.ttf') format('woff'); 
 }
 
 body {
-    background: bisque;
-    padding: 0 1rem;  
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: var(--font-cyber);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle, #090e18 0%, #030307 100%);
 }
 
-/* Trabalhando o header da página do joguinho */
-header {
-    border-color: black;
-    border-style: solid;
-    border-width: 0 1px 1px 1px;
+/* Moldura Arcade/Fliperama */
+.arcade-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    background: #0d111d;
+    border: 4px solid #1f293d;
+    border-radius: 16px;
     padding: 1rem;
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
     display: flex;
-    justify-content: center; /* Centraliza horizontalmente todo o conteúdo */
-    align-items: center; /* Centraliza verticalmente todo o conteúdo */
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+/* Header Estilo Cyber/Militar */
+header {
+    background: rgba(13, 20, 35, 0.9);
+    border: 2px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
 }
 
 .header-content {
-    display: flex; /* Criar um flex container para o logotipo e a nav */
-    align-items: center; /* Centraliza verticalmente logotipo e nav */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
-header img {
-    margin: 1rem;
-    width: 200px;
+header img.logo {
+    width: 160px;
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.3));
 }
 
 header nav {
-    margin-left: 1rem; /* Adicione margem à esquerda para separar o logo dos botões */
+    display: flex;
+    gap: 15px;
 }
 
-nav a {
-    background-color: rgb(23, 114, 252);
-    border: 3px solid rgb(5, 6, 7);
-    color: #fff;
-    font-size: 1.25rem;
-    padding: .75rem 1rem;
-    max-width: fit-content;
+header nav a {
+    font-family: var(--font-cyber);
+    font-weight: 700;
+    color: var(--atomic-blue);
     text-decoration: none;
     text-transform: uppercase;
-    border-radius: 5px;
-    margin-right: 0.5rem; /* Adicione margem à direita para separar os botões */
-    font-family: 'Godzilla', sans-serif;
-    font-weight: lighter;
+    font-size: 0.85rem;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 4px black;
+    border: 1px solid var(--panel-border);
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background: rgba(0, 229, 255, 0.05);
 }
 
-/* Trabalhando o game-board e seus componentes */
+header nav a:hover {
+    background: var(--atomic-blue);
+    color: #030307;
+    box-shadow: 0 0 15px var(--atomic-blue);
+}
+
+/* Tabuleiro Do Jogo */
 .game-board {
     width: 100%;
-    height: 75vh;
-    border-bottom: 0px solid #2b362d;
-    margin: 0 auto;
+    height: 480px;
+    border: 3px solid var(--panel-border);
+    border-radius: 8px;
     position: relative;
     overflow: hidden;
-    position: relative;
-    margin-bottom: 23px;
     background-image: url('./img/bg2.png');
     background-size: cover;
-    background-position: center;
-    /* animation: move-background 60s linear infinite; */
+    background-position: center bottom;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
 }
 
-.button-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+/* Efeito CRT Retro Scanlines */
+.crt-scanlines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    z-index: 15;
+    pointer-events: none;
+    opacity: 0.75;
 }
 
-.perdeu {
-    width: 700px;
-    margin: 10px;
-    display: none;
-    z-index: 4;
-}
-
-.restart-button {
-    display: none;
-    background-color: rgb(23, 114, 252);
-    border: 3px solid rgb(5, 6, 7);
-    color: #fff;
-    font-size: 1.5rem;
-    padding: .75rem 1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-    border-radius: 5px;
-    font-family: 'Godzilla', sans-serif;
-    font-weight: lighter;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px black;
-    z-index: 5;
-    cursor: pointer;
-}
-
+/* Obstáculos & Personagens */
 .pipe {
-   position: absolute;
-   bottom: 0;
-   width: 65px;
-   /* left: 200px; */ 
-   animation: pipe-animation 1.75s infinite linear;
-   z-index: 3;
+    position: absolute;
+    bottom: 0;
+    width: 55px;
+    animation: pipe-animation 1.6s infinite linear;
+    animation-play-state: paused;
+    z-index: 3;
+    display: none;
+    filter: drop-shadow(0 0 5px rgba(255, 51, 68, 0.3));
 }
 
 .sea {
     position: absolute;
-    bottom: 0; 
+    bottom: 0;
     width: 100%;
-    height: 250px;
+    height: 150px;
     z-index: 4;
+    opacity: 0.85;
+    pointer-events: none;
 }
 
 .kaiju {
-    width: 250px;
+    width: 170px;
     position: absolute;
     bottom: 0;
+    left: 40px;
     z-index: 3;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.7));
 }
 
 .jump {
-    animation: jump 500ms ease-out;
+    animation: jump 520ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Elementos do Cenário (Suaves e Desfocados ao Perder) */
+.clouds, .plane, .superX, .gotengo {
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 0.8s ease, filter 0.8s ease;
 }
 
 .clouds {
-    position: absolute;
-    width: 300px;
-    top: 30px;
-    animation: clouds-animation 20s infinite linear;
+    width: 250px;
+    top: 25px;
+    animation: clouds-animation 22s infinite linear;
     z-index: 0;
+    opacity: 0.55;
+    display: none;
 }
 
 .plane {
-    position: absolute;
-    width: 200px;
+    width: 180px;
     top: 10px;
-    animation: plane-animation 50s infinite linear;
-    z-index: 0; 
+    animation: plane-animation 45s infinite linear;
+    z-index: 0;
 }
 
 .superX {
-    position: absolute;
-    width: 100px;
-    top: 30px;
-    animation: plane-animation 30s infinite linear;
-    z-index: 1; 
+    width: 80px;
+    top: 35px;
+    animation: plane-animation 26s infinite linear;
+    z-index: 1;
 }
 
 .gotengo {
-    position: absolute;
-    width: 300px;
-    animation: ships-animation 40s infinite linear;
-    bottom: 120px;
-    z-index: 0; 
+    width: 260px;
+    animation: ships-animation 35s infinite linear;
+    bottom: 80px;
+    z-index: 0;
 }
 
-/* Trabalhando o score-board */
+/* Paralisar quando perder */
+.game-board.game-over .clouds,
+.game-board.game-over .plane,
+.game-board.game-over .superX,
+.game-board.game-over .gotengo {
+    opacity: 0.1 !important;
+    filter: blur(4px);
+    animation-play-state: paused !important;
+}
+
+/* Painel de Pontuação Cyber */
 .score-board {
     position: absolute;
-    display: flex;
-    flex-direction: row;
-    margin-top: 1rem;
+    top: 16px;
+    right: 16px;
+    background: var(--panel-bg);
+    border: 2px solid var(--panel-border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    display: none;
     align-items: center;
+    gap: 12px;
+    z-index: 11;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
 
 .icon {
-    display: none;
-    width: 80px;
-    margin-left: 15px;
-    z-index: 2;
-}
-
-.score, .highscore {
-    display: none;
-    color: #fff;
-    font-size: 1.5rem;
-    padding: .5rem 1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-family: 'Godzilla', sans-serif;
-    font-weight: normal;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgb(0, 0, 0);
-    z-index: 1;
+    width: 44px;
+    height: 44px;
+    border-radius: 4px;
+    border: 1px solid var(--panel-border);
 }
 
 .score-column {
@@ -200,186 +233,209 @@ nav a {
     flex-direction: column;
 }
 
-.begin {
+.score, .highscore {
+    font-family: var(--font-retro);
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    margin: 2px 0;
+    letter-spacing: 1px;
+}
+
+.score span {
+    color: var(--atomic-blue);
+    text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
+}
+
+.highscore span {
+    color: var(--laser-green);
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0.4);
+}
+
+/* Telas Sobrepostas (Início e GameOver) */
+.overlay-screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(3, 3, 7, 0.65);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    z-index: 10;
+    transition: opacity 0.5s ease;
+    padding: 1.5rem;
 }
 
-.start-button {
-    background-color: rgb(23, 114, 252);
-    border: 3px solid rgb(5, 6, 7);
-    color: #fff;
-    font-size: 1.5rem;
-    padding: .75rem 1rem;
-    text-decoration: none;
-    text-transform: uppercase;
-    border-radius: 5px;
-    font-family: 'Godzilla', sans-serif;
-    font-weight: lighter;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px black;
-    z-index: 5;
-    cursor: pointer;
+.overlay-screen.begin {
+    background: rgba(3, 3, 7, 0.82);
 }
 
-audio {
-    width: 300px;
-    height: 50px;
-    background-color: #f2f2f2;
-    color: #333;
-    border-radius: 10px;
+.ready {
+    width: 320px;
+    margin-bottom: 25px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Tela de Derrota / Game Over - Sem Acúmulo! */
+.game-over-overlay {
+    display: none;
+    background: rgba(5, 5, 10, 0.9); /* Escurece bastante o fundo caótico */
+    z-index: 12;
+}
+
+.defeat-banner {
+    transform: scale(0.8);
+    animation: stampIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align: center;
+    margin-bottom: 25px;
 }
-  
-.copyright {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    text-transform: uppercase;
-    font-family: 'Godzilla', sans-serif;
-    font-weight: normal;
+
+.perdeu {
+    width: 500px;
+    max-width: 90%;
+    filter: drop-shadow(0 0 15px var(--danger-red));
+}
+
+.cause-text {
+    font-family: var(--font-retro);
+    font-size: 0.6rem;
+    color: var(--danger-red);
     letter-spacing: 2px;
-    font-size: 1.25rem;
+    margin-top: 10px;
+    text-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
 }
 
-/* Trabalhando animações */
-@keyframes pipe-animation {
-    from {
-        right: -80px;
-    }
+/* Botões Retro / Cyber */
+.btn-retro {
+    background: rgba(0, 229, 255, 0.08);
+    border: 3px solid var(--atomic-blue);
+    color: var(--atomic-blue);
+    font-family: var(--font-retro);
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 10px rgba(0, 229, 255, 0.15);
+    text-shadow: 0 0 5px var(--atomic-blue);
+}
 
-    to {
-        right: 100%;
-    }
+.btn-retro:hover {
+    background: var(--atomic-blue);
+    color: #030307;
+    box-shadow: 0 0 30px var(--atomic-blue);
+    transform: translateY(-2px);
+    text-shadow: none;
+}
+
+.btn-retro:active {
+    transform: translateY(1px);
+}
+
+/* Pulsação do Reinício */
+.pulse-btn {
+    border-color: var(--danger-red);
+    color: var(--danger-red);
+    box-shadow: 0 0 15px rgba(255, 51, 68, 0.2), inset 0 0 10px rgba(255, 51, 68, 0.15);
+    text-shadow: 0 0 5px var(--danger-red);
+    animation: buttonPulse 1.8s infinite;
+}
+
+.pulse-btn:hover {
+    background: var(--danger-red);
+    color: #ffffff;
+    box-shadow: 0 0 35px var(--danger-red);
+}
+
+/* Footer do Arcade */
+footer {
+    display: flex;
+    justify-content: center;
+}
+
+.copyright {
+    text-transform: uppercase;
+    font-family: var(--font-retro);
+    font-size: 0.55rem;
+    color: #4b5a75;
+    letter-spacing: 1px;
+}
+
+.highlight {
+    color: var(--atomic-blue);
+    text-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
+}
+
+/* Animação de Impacto (Screen Shake) */
+.shake {
+    animation: screenShake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Animações e Keyframes */
+@keyframes pipe-animation {
+    from { right: -80px; }
+    to { right: 100%; }
 }
 
 @keyframes jump {
-    0% {
-        bottom: 0;
-    }
-
-    40% {
-        bottom: 320px;
-    }
-
-    50% {
-        bottom: 320px;
-    }
-
-    60% {
-        bottom: 270px;
-    }
-
-    100% {
-        bottom: 0;
-    }
+    0% { bottom: 0px; }
+    35% { bottom: 230px; }
+    55% { bottom: 230px; }
+    70% { bottom: 200px; }
+    100% { bottom: 0px; }
 }
 
 @keyframes plane-animation {
-    from {
-        right: -600px;
-    }
-
-    to {
-        right: 100%;
-    }
+    from { right: -600px; }
+    to { right: 100%; }
 }
 
 @keyframes ships-animation {
-    from {
-        left: -600px;
-    }
-
-    to {
-        left: 100%;
-    }
+    from { left: -600px; }
+    to { left: 100%; }
 }
 
 @keyframes clouds-animation {
-    from {
-        right: -300px;
-    }
-
-    to {
-        right: 100%;
-    }
+    from { right: -300px; }
+    to { right: 100%; }
 }
 
-@keyframes move-background {
-    0% {
-        background-position: 0;
-    }
-    50% {
-        background-position: 100%;
-    }
-    100% {
-        background-position: 200%;
-    }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; }
 }
 
-/* Trabalhando responsividade */
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); box-shadow: 0 0 25px var(--danger-red), inset 0 0 10px rgba(255, 51, 68, 0.3); }
+    100% { transform: scale(1); }
+}
+
+@keyframes stampIn {
+    0% { transform: scale(0.4); opacity: 0; }
+    100% { transform: scale(1.0); opacity: 1; }
+}
+
+@keyframes screenShake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+    40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+/* Adaptação Responsiva */
 @media (max-width: 768px) {
-    html {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 768px) {
-    nav a {
-        font-size: 1rem;
-        padding: .5rem .75rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .game-board {
-        height: 400px;
-    }
-}
-
-@media (max-width: 768px) {
-    .perdeu {
-        width: 90%;
-    }
-}
-
-@media (max-width: 768px) {
-    .restart-button {
-        font-size: 1rem;
-        padding: .5rem .75rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .pipe {
-        width: 50px;
-    }
-}
-
-@media (max-width: 768px) {
-    .kaiju {
-        width: 150px;
-    }
-}
-
-@media (max-width: 768px) {
-    .clouds,
-    .plane {
-        display: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .copyright {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .game-board {
-        height: 30vh; 
-    }
+    .arcade-wrapper { margin: 10px; padding: 0.5rem; }
+    header { flex-direction: column; gap: 8px; padding: 0.5rem; }
+    .header-content { flex-direction: column; gap: 10px; }
+    header nav { gap: 10px; }
+    header nav a { font-size: 0.75rem; padding: 4px 8px; }
+    .game-board { height: 320px; }
+    .perdeu { width: 300px; }
+    .btn-retro { font-size: 0.8rem; padding: 10px 20px; }
+    .pipe { width: 45px; }
+    .kaiju { width: 110px; }
+    .sea { height: 110px; }
+    .clouds, .plane, .superX, .gotengo { display: none !important; }
 }
