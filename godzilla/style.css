@@ -32,6 +32,25 @@ body {
     overflow-x: hidden;
     background-image: radial-gradient(circle, #090e18 0%, #030307 100%);
     padding: 1rem;
+    position: relative; /* Necessário para a sirene de fundo */
+}
+
+/* Efeito de Sirene (Agora no fundo global) */
+.siren-overlay {
+    position: fixed; /* Fixado na tela inteira */
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, transparent 25%, rgba(255, 0, 0, 0.4) 100%);
+    z-index: -1; /* Jogado para trás do arcade-wrapper */
+    pointer-events: none;
+    opacity: 0;
+    will-change: opacity;
+}
+body.is-playing .siren-overlay {
+    animation: siren-pulse 2s infinite ease-in-out;
+}
+@keyframes siren-pulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
 }
 
 .arcade-wrapper {
@@ -105,7 +124,7 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     background-position: center bottom;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
     transition: filter 2s ease-in-out;
-    will-change: filter; /* Aceleração de Hardware para o Filtro de Ameaça */
+    will-change: filter; 
 }
 
 .threat-level-1 { filter: hue-rotate(-15deg) saturate(1.2); }
@@ -140,25 +159,8 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 }
 
 /* ------------------------------------------------ */
-/* EFEITOS CINEMATOGRÁFICOS                         */
+/* EFEITOS CINEMATOGRÁFICOS INTERNOS                */
 /* ------------------------------------------------ */
-.siren-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle, transparent 30%, rgba(255, 0, 0, 0.3) 100%);
-    z-index: 14; 
-    pointer-events: none;
-    opacity: 0;
-    will-change: opacity;
-}
-.game-board.is-playing .siren-overlay {
-    animation: siren-pulse 2s infinite ease-in-out;
-}
-@keyframes siren-pulse {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
-}
-
 .ash-particles {
     position: absolute;
     top: -50px;
@@ -168,7 +170,7 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     background: transparent;
     z-index: 9;
     pointer-events: none;
-    will-change: transform; /* Aceleração de Hardware para Partículas */
+    will-change: transform; 
     box-shadow: 
         100px 50px 2px 0px #ffaa00, 250px 150px 1px 0px #ff3300, 300px 80px 2px 0px #555,
         450px 200px 3px 0px #ffaa00, 600px 50px 1px 0px #333, 750px 250px 2px 0px #ff4400,
@@ -192,7 +194,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     animation: ash-fall 12s linear infinite;
 }
 @keyframes ash-fall {
-    /* Translate3d joga o processamento direto pra Placa de Vídeo */
     0% { transform: translate3d(0, -50px, 0); }
     100% { transform: translate3d(-100px, 600px, 0); }
 }
@@ -209,8 +210,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 /* ------------------------------------------------ */
 /* PERSONAGENS E OBJETOS (ACELERAÇÃO DE HARDWARE)   */
 /* ------------------------------------------------ */
-
-/* Ativando will-change para os elementos dinâmicos */
 .pipe, .kaiju, .clouds, .plane, .superX, .gotengo {
     will-change: transform;
 }
@@ -218,7 +217,7 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 .pipe {
     position: absolute;
     bottom: 0;
-    left: 100%; /* Começa fora da tela pela direita */
+    left: 100%; 
     width: 60px;
     animation-name: pipe-animation;
     animation-timing-function: linear;
@@ -230,7 +229,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 }
 
 @keyframes pipe-animation { 
-    /* Move usando transform (MUITO mais leve que right/left) */
     from { transform: translate3d(0, 0, 0); } 
     to { transform: translate3d(-120vw, 0, 0); } 
 }
@@ -250,7 +248,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 }
 
 @keyframes jump {
-    /* Pulo sem reflow, processado 100% na GPU */
     0% { transform: translate3d(0, 0px, 0); animation-timing-function: ease-out; }
     50% { transform: translate3d(0, -250px, 0); animation-timing-function: ease-in; }
     100% { transform: translate3d(0, 0px, 0); }
@@ -276,7 +273,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     to { transform: translate3d(-150vw, 0, 0); } 
 }
 
-/* Naves flutuantes baseadas em viewport width */
 .plane {
     width: 180px;
     top: 10px;
@@ -295,7 +291,7 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 
 .gotengo {
     width: 260px;
-    right: 100%; /* Começa pela esquerda */
+    right: 100%; 
     bottom: 80px;
     animation: gotengo-bobbing 30s infinite linear;
     z-index: 1;

@@ -117,6 +117,9 @@ const initPrematch = () => {
     currentJumpDuration = 550;
     pipe.style.animationDuration = `${currentPipeSpeed}s`;
     
+    // Desliga a sirene no fundo
+    document.body.classList.remove('is-playing');
+    
     updateHighscore();
 };
 
@@ -135,6 +138,9 @@ const resumeAnimations = () => {
     gotengo.style.animationPlayState = 'running';
     
     gameBoard.classList.add('is-playing');
+    
+    // Liga a sirene no fundo global do body
+    document.body.classList.add('is-playing');
     
     // Atualiza o cache de dimensões uma única vez no início
     cachedKaijuWidth = kaiju.getBoundingClientRect().width;
@@ -186,6 +192,9 @@ const gameLoop = () => {
         
         gameBoard.classList.add('shake');
         gameBoard.classList.remove('is-playing'); 
+        
+        // Desliga a sirene no fundo
+        document.body.classList.remove('is-playing');
 
         // Como usamos 'transform' no CSS, precisamos traduzir a posição visual atual
         // para uma posição fixa absoluta na tela ao morrer.
