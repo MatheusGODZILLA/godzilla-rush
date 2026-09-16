@@ -89,7 +89,7 @@ header nav a {
 header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow: 0 0 15px var(--atomic-blue); }
 
 /* ------------------------------------------------ */
-/* CENÁRIO (ESTÁTICO) E TRANSIÇÃO DE AMEAÇA         */
+/* CENÁRIO E TRANSIÇÃO DE AMEAÇA                    */
 /* ------------------------------------------------ */
 .game-board {
     width: 100%;
@@ -104,10 +104,10 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     background-size: cover;
     background-position: center bottom;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
-    transition: filter 2s ease-in-out; /* Suaviza a troca de cor do nível de ameaça */
+    transition: filter 2s ease-in-out;
+    will-change: filter; /* Aceleração de Hardware para o Filtro de Ameaça */
 }
 
-/* Filtros Dinâmicos aplicados via JS */
 .threat-level-1 { filter: hue-rotate(-15deg) saturate(1.2); }
 .threat-level-2 { filter: hue-rotate(-30deg) saturate(1.4); }
 .threat-level-3 { filter: hue-rotate(-50deg) saturate(1.8) contrast(1.1); }
@@ -123,7 +123,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     opacity: 0.75;
 }
 
-/* O Mar Fixo para esconder os pés */
 .sea {
     position: absolute;
     bottom: 0;
@@ -131,27 +130,26 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     width: 100%;
     height: 25vh;
     min-height: 100px;
-    max-height: 180px; /* Mais baixo para não cobrir tanto */
-    z-index: 10; /* Acima do Kaiju(6) e Obstáculo(5) */
+    max-height: 180px; 
+    z-index: 10; 
     background-image: url('./img/sea.png');
-    background-size: 100% 100%; /* Estica para preencher a largura e altura definidas */
+    background-size: 100% 100%; 
     background-repeat: no-repeat;
     background-position: center bottom;
     pointer-events: none;
 }
 
 /* ------------------------------------------------ */
-/* NOVOS EFEITOS CINEMATOGRÁFICOS                   */
+/* EFEITOS CINEMATOGRÁFICOS                         */
 /* ------------------------------------------------ */
-
-/* Efeito de Sirene (Siren Pulse) */
 .siren-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background: radial-gradient(circle, transparent 30%, rgba(255, 0, 0, 0.3) 100%);
-    z-index: 14; /* Abaixo das scanlines, acima de tudo */
+    z-index: 14; 
     pointer-events: none;
     opacity: 0;
+    will-change: opacity;
 }
 .game-board.is-playing .siren-overlay {
     animation: siren-pulse 2s infinite ease-in-out;
@@ -161,7 +159,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     50% { opacity: 1; }
 }
 
-/* Fagulhas / Chuva de Cinzas (Shadow Particles) */
 .ash-particles {
     position: absolute;
     top: -50px;
@@ -171,7 +168,7 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     background: transparent;
     z-index: 9;
     pointer-events: none;
-    /* Sombras mágicas gerando dezenas de fagulhas em posições aleatórias */
+    will-change: transform; /* Aceleração de Hardware para Partículas */
     box-shadow: 
         100px 50px 2px 0px #ffaa00, 250px 150px 1px 0px #ff3300, 300px 80px 2px 0px #555,
         450px 200px 3px 0px #ffaa00, 600px 50px 1px 0px #333, 750px 250px 2px 0px #ff4400,
@@ -181,7 +178,6 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
         50px 220px 1px 0px #ffaa00, 850px 100px 3px 0px #ff4400, 1050px 200px 1px 0px #333,
         1500px 350px 2px 0px #ffaa00, 1400px 50px 1px 0px #ff3300, 1600px 250px 2px 0px #555;
 }
-/* Camada duplicada para fluidez contínua */
 .ash-particles::after {
     content: "";
     position: absolute;
@@ -196,26 +192,33 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     animation: ash-fall 12s linear infinite;
 }
 @keyframes ash-fall {
-    0% { transform: translateY(-50px) translateX(0); }
-    100% { transform: translateY(600px) translateX(-100px); }
+    /* Translate3d joga o processamento direto pra Placa de Vídeo */
+    0% { transform: translate3d(0, -50px, 0); }
+    100% { transform: translate3d(-100px, 600px, 0); }
 }
 
-/* Micro-tremor de Pouso */
 .landing-shake {
     animation: land-bump 0.15s cubic-bezier(.36,.07,.19,.97) both;
 }
 @keyframes land-bump {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
-    100% { transform: translateY(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, 4px, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }
 
 /* ------------------------------------------------ */
-/* PERSONAGENS E OBJETOS                            */
+/* PERSONAGENS E OBJETOS (ACELERAÇÃO DE HARDWARE)   */
 /* ------------------------------------------------ */
+
+/* Ativando will-change para os elementos dinâmicos */
+.pipe, .kaiju, .clouds, .plane, .superX, .gotengo {
+    will-change: transform;
+}
+
 .pipe {
     position: absolute;
     bottom: 0;
+    left: 100%; /* Começa fora da tela pela direita */
     width: 60px;
     animation-name: pipe-animation;
     animation-timing-function: linear;
@@ -224,6 +227,12 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
     z-index: 5;
     display: none;
     filter: drop-shadow(0 0 5px rgba(255, 51, 68, 0.3));
+}
+
+@keyframes pipe-animation { 
+    /* Move usando transform (MUITO mais leve que right/left) */
+    from { transform: translate3d(0, 0, 0); } 
+    to { transform: translate3d(-120vw, 0, 0); } 
 }
 
 .kaiju {
@@ -241,9 +250,10 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 }
 
 @keyframes jump {
-    0% { bottom: 0px; animation-timing-function: ease-out; }
-    50% { bottom: 250px; animation-timing-function: ease-in; }
-    100% { bottom: 0px; }
+    /* Pulo sem reflow, processado 100% na GPU */
+    0% { transform: translate3d(0, 0px, 0); animation-timing-function: ease-out; }
+    50% { transform: translate3d(0, -250px, 0); animation-timing-function: ease-in; }
+    100% { transform: translate3d(0, 0px, 0); }
 }
 
 .clouds, .plane, .superX, .gotengo {
@@ -255,15 +265,22 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 .clouds {
     width: 250px;
     top: 25px;
+    left: 100%;
     animation: clouds-animation 22s infinite linear;
     z-index: 0;
     opacity: 0.55;
     display: none;
 }
+@keyframes clouds-animation { 
+    from { transform: translate3d(0, 0, 0); } 
+    to { transform: translate3d(-150vw, 0, 0); } 
+}
 
+/* Naves flutuantes baseadas em viewport width */
 .plane {
     width: 180px;
     top: 10px;
+    left: 100%;
     animation: plane-bobbing 35s infinite linear;
     z-index: 1;
 }
@@ -271,43 +288,42 @@ header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow:
 .superX {
     width: 80px;
     top: 35px;
+    left: 100%;
     animation: superx-bobbing 22s infinite linear;
     z-index: 2;
 }
 
 .gotengo {
     width: 260px;
-    animation: gotengo-bobbing 30s infinite linear;
+    right: 100%; /* Começa pela esquerda */
     bottom: 80px;
+    animation: gotengo-bobbing 30s infinite linear;
     z-index: 1;
 }
 
 @keyframes plane-bobbing {
-    0% { right: -600px; transform: translateY(0); }
-    25% { transform: translateY(15px); }
-    50% { transform: translateY(0); }
-    75% { transform: translateY(-15px); }
-    100% { right: 100%; transform: translateY(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(-30vw, 15px, 0); }
+    50% { transform: translate3d(-60vw, 0, 0); }
+    75% { transform: translate3d(-90vw, -15px, 0); }
+    100% { transform: translate3d(-150vw, 0, 0); }
 }
 
 @keyframes superx-bobbing {
-    0% { right: -600px; transform: translateY(0); }
-    25% { transform: translateY(-20px); }
-    50% { transform: translateY(0); }
-    75% { transform: translateY(20px); }
-    100% { right: 100%; transform: translateY(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(-30vw, -20px, 0); }
+    50% { transform: translate3d(-60vw, 0, 0); }
+    75% { transform: translate3d(-90vw, 20px, 0); }
+    100% { transform: translate3d(-150vw, 0, 0); }
 }
 
 @keyframes gotengo-bobbing {
-    0% { left: -600px; transform: translateY(0); }
-    25% { transform: translateY(-10px); }
-    50% { transform: translateY(0); }
-    75% { transform: translateY(10px); }
-    100% { left: 100%; transform: translateY(0); }
+    0% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(30vw, -10px, 0); }
+    50% { transform: translate3d(60vw, 0, 0); }
+    75% { transform: translate3d(90vw, 10px, 0); }
+    100% { transform: translate3d(150vw, 0, 0); }
 }
-
-@keyframes pipe-animation { from { right: -80px; } to { right: 100%; } }
-@keyframes clouds-animation { from { right: -300px; } to { right: 100%; } }
 
 .game-board.game-over .clouds,
 .game-board.game-over .plane,

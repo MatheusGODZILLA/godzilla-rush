@@ -33,8 +33,12 @@ let score = 0;
 let highscore = localStorage.getItem('highscore') || 0;
 
 // Variáveis de Dificuldade
-let currentPipeSpeed = 1.6; // Velocidade inicial do cano (segundos)
-let currentJumpDuration = 550; // Tempo inicial de pulo (ms)
+let currentPipeSpeed = 1.6;
+let currentJumpDuration = 550;
+
+// Cache de Dimensões (Otimização JS: evita recálculo desnecessário de width/height todo frame)
+let cachedKaijuWidth = 0;
+let cachedKaijuHeight = 0;
 
 const formatScore = (num) => String(num).padStart(4, '0');
 
@@ -46,14 +50,13 @@ const updateHighscore = () => {
     document.getElementById('highscore').textContent = formatScore(highscore);
 };
 
-// Mecânica do Pulo Sincronizada
+// Mecânica do Pulo Sincronizada via Hardware Acceleration
 const jump = (event) => {
     if (event && event.type === 'keydown' && event.code !== 'Space' && event.code !== 'ArrowUp') return;
     
     if (!isGameOver && isGameStarted) {
         if (kaiju.classList.contains('jump')) return;
 
-        // Aplica a velocidade atual calculada ao pulo no CSS
         kaiju.style.animationDuration = `${currentJumpDuration}ms`;
         kaiju.classList.add('jump');
         
@@ -62,9 +65,8 @@ const jump = (event) => {
 
         setTimeout(() => {
             kaiju.classList.remove('jump');
-            kaiju.style.animationDuration = ''; // Limpa estilo inline
+            kaiju.style.animationDuration = ''; 
             
-            // EFEITO 1: Tremor de Pouso (O Peso do Rei)
             if (!isGameOver) {
                 gameBoard.classList.add('landing-shake');
                 setTimeout(() => gameBoard.classList.remove('landing-shake'), 150);
@@ -79,21 +81,16 @@ const jump = (event) => {
                 if (score > 0 && score % 50 === 0) increaseDifficulty();
             }
             updateHighscore();
-        }, currentJumpDuration); // Timeout usa a duração exata do pulo atual
+        }, currentJumpDuration);
     }
 };
 
-// Curva Suave de Aceleração
 const increaseDifficulty = () => {
-    // Reduz a duração do cano em 2.5% a cada 50 pontos, limite mínimo de 0.9s
     currentPipeSpeed = Math.max(0.9, currentPipeSpeed * 0.975);
     pipe.style.animationDuration = `${currentPipeSpeed}s`;
 
-    // Reduz o tempo de pulo proporcionalmente para manter a jogabilidade justa
-    // Se o cano tá mais rápido, o Godzilla precisa cair mais rápido
     currentJumpDuration = Math.max(350, currentJumpDuration * 0.98);
 
-    // EFEITO 4: Transição de Nível de Ameaça (Cores Dinâmicas)
     if (score === 100) gameBoard.classList.add('threat-level-1');
     if (score === 200) gameBoard.classList.add('threat-level-2');
     if (score === 300) gameBoard.classList.add('threat-level-3');
@@ -115,7 +112,6 @@ const initPrematch = () => {
     kaiju.src = './img/stop.gif';
     kaiju.style.width = '190px';
     
-    // Reseta filtros de ameaça e velocidades
     gameBoard.classList.remove('threat-level-1', 'threat-level-2', 'threat-level-3', 'threat-level-max');
     currentPipeSpeed = 1.6;
     currentJumpDuration = 550;
@@ -138,9 +134,12 @@ const resumeAnimations = () => {
     superX.style.animationPlayState = 'running';
     gotengo.style.animationPlayState = 'running';
     
-    // Adiciona classe para ativar animações dependentes de estado (Sirene, Cinzas)
     gameBoard.classList.add('is-playing');
     
+    // Atualiza o cache de dimensões uma única vez no início
+    cachedKaijuWidth = kaiju.getBoundingClientRect().width;
+    cachedKaijuHeight = kaiju.getBoundingClientRect().height;
+
     somAndando.play().catch(() => {});
 
     scoreBoard.style.display = 'flex';
@@ -152,17 +151,19 @@ const resumeAnimations = () => {
     document.addEventListener('touchstart', jump);
 };
 
-// Loop de Jogo Principal (AABB Hitbox)
+// Loop de Jogo Principal Altamente Otimizado
 const gameLoop = () => {
     if (!isGameStarted) return;
 
+    // getBoundingClientRect é rápido se não houver reflow. Retorna x/y baseados na janela.
     const kaijuRect = kaiju.getBoundingClientRect();
     const pipeRect = pipe.getBoundingClientRect();
 
+    // Usando as variáveis cacheadas em vez de ler propriedades repetitivamente
     const kHitbox = {
-        left: kaijuRect.left + (kaijuRect.width * 0.30),  
-        right: kaijuRect.right - (kaijuRect.width * 0.15), 
-        top: kaijuRect.top + (kaijuRect.height * 0.10),    
+        left: kaijuRect.left + (cachedKaijuWidth * 0.30),  
+        right: kaijuRect.right - (cachedKaijuWidth * 0.15), 
+        top: kaijuRect.top + (cachedKaijuHeight * 0.10),    
         bottom: kaijuRect.bottom - 10                      
     };
 
@@ -181,14 +182,20 @@ const gameLoop = () => {
     ) {
         isGameOver = true;
         
+        const boardRect = gameBoard.getBoundingClientRect();
+        
         gameBoard.classList.add('shake');
         gameBoard.classList.remove('is-playing'); 
 
+        // Como usamos 'transform' no CSS, precisamos traduzir a posição visual atual
+        // para uma posição fixa absoluta na tela ao morrer.
         pipe.style.animation = 'none';
-        pipe.style.left = `${pipeRect.left - gameBoard.getBoundingClientRect().left}px`;
+        pipe.style.left = `${pipeRect.left - boardRect.left}px`;
+        pipe.style.transform = 'none'; // Zera o transform para não somar duas vezes
         
         kaiju.style.animation = 'none';
-        kaiju.style.bottom = `${window.innerHeight - kaijuRect.bottom}px`; 
+        kaiju.style.bottom = `${boardRect.bottom - kaijuRect.bottom}px`; 
+        kaiju.style.transform = 'none';
         
         gameBoard.classList.add('game-over');
 

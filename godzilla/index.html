@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>On Rush - GODZILLA-RUSH</title>
+    
+    <!-- PRELOADS PARA MÁXIMA PERFORMANCE -->
+    <link rel="preload" href="./img/godzilla.gif" as="image">
+    <link rel="preload" href="./img/game-over.png" as="image">
+    <link rel="preload" href="./img/pipe.png" as="image">
+    <link rel="preload" href="./sounds/varan_hit.wav" as="audio">
+    <link rel="preload" href="./sounds/explosion.wav" as="audio">
+    <link rel="preload" href="./sounds/gigan_hit.wav" as="audio">
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
@@ -23,7 +32,6 @@
         <div class="game-board" id="game-board">
             <div class="crt-scanlines"></div>
             
-            <!-- NOVOS EFEITOS VISUAIS: Sirene e Fagulhas -->
             <div class="siren-overlay"></div>
             <div class="ash-particles"></div>
             
