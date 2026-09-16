@@ -1,25 +1,22 @@
 // Captura de Elementos-Chave
-const kaiju = document.querySelector('.kaiju');
-const pipe = document.querySelector('.pipe');
+const kaiju = document.getElementById('kaiju');
+const pipe = document.getElementById('pipe');
 const clouds = document.querySelector('.clouds');
 const restartButton = document.getElementById('restart-button');
 const startButton = document.getElementById('start-button');
 const startScreen = document.getElementById('start-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
-const gameBoard = document.querySelector('.game-board');
+const gameBoard = document.getElementById('game-board');
 
-// Elementos Secundários de Fundo
 const plane = document.querySelector('.plane');
 const superX = document.querySelector('.superX');
 const gotengo = document.querySelector('.gotengo');
 
-// HUD
 const icon = document.querySelector('.icon');
 const scores = document.querySelector('.score');
 const highscores = document.querySelector('.highscore');
 const scoreBoard = document.querySelector('.score-board');
 
-// Áudios do Jogo
 const somAndando = document.getElementById("somAndando");
 const gameover = document.getElementById("gameover");
 const collide = document.getElementById("collide");
@@ -29,15 +26,16 @@ const pain = document.getElementById("pain");
 const bgm = document.getElementById("bgm");
 const rush = document.getElementById("rush");
 
-// Estado do Jogo
 let isGameOver = false;
 let isGameStarted = false;
 let loopId;
 let score = 0;
 let highscore = localStorage.getItem('highscore') || 0;
-let baseSpeed = 1.6; // Tempo de animação inicial do obstáculo (segundos)
 
-// Sistema de Placar Formatado
+// Variáveis de Dificuldade
+let currentPipeSpeed = 1.6; // Velocidade inicial do cano (segundos)
+let currentJumpDuration = 550; // Tempo inicial de pulo (ms)
+
 const formatScore = (num) => String(num).padStart(4, '0');
 
 const updateHighscore = () => {
@@ -48,44 +46,62 @@ const updateHighscore = () => {
     document.getElementById('highscore').textContent = formatScore(highscore);
 };
 
-// Mecânica do Pulo
+// Mecânica do Pulo Sincronizada
 const jump = (event) => {
-    // Teclas aceitas: Espaço (Space) ou Seta pra Cima (ArrowUp) ou cliques no mobile
     if (event && event.type === 'keydown' && event.code !== 'Space' && event.code !== 'ArrowUp') return;
     
-    // Evita ação fora de jogo ou duplo-pulo consecutivo
     if (!isGameOver && isGameStarted) {
         if (kaiju.classList.contains('jump')) return;
 
+        // Aplica a velocidade atual calculada ao pulo no CSS
+        kaiju.style.animationDuration = `${currentJumpDuration}ms`;
         kaiju.classList.add('jump');
+        
         fly.currentTime = 0;
         fly.play().catch(() => {});
 
         setTimeout(() => {
             kaiju.classList.remove('jump');
+            kaiju.style.animationDuration = ''; // Limpa estilo inline
+            
+            // EFEITO 1: Tremor de Pouso (O Peso do Rei)
+            if (!isGameOver) {
+                gameBoard.classList.add('landing-shake');
+                setTimeout(() => gameBoard.classList.remove('landing-shake'), 150);
+            }
+
             if (!isGameOver) {
                 fall.currentTime = 0;
                 fall.play().catch(() => {});
                 score += 10;
                 document.getElementById('score').textContent = formatScore(score);
                 
-                // Adaptação de Dificuldade: Acelera o obstáculo levemente a cada 50 pontos
-                if (score % 50 === 0) {
-                    increaseDifficulty();
-                }
+                if (score > 0 && score % 50 === 0) increaseDifficulty();
             }
             updateHighscore();
-        }, 520);
+        }, currentJumpDuration); // Timeout usa a duração exata do pulo atual
     }
 };
 
-// Progressão de Dificuldade (Gameplay interessante!)
+// Curva Suave de Aceleração
 const increaseDifficulty = () => {
-    const nextSpeed = Math.max(0.7, baseSpeed - (score * 0.0015));
-    pipe.style.animationDuration = `${nextSpeed}s`;
+    // Reduz a duração do cano em 2.5% a cada 50 pontos, limite mínimo de 0.9s
+    currentPipeSpeed = Math.max(0.9, currentPipeSpeed * 0.975);
+    pipe.style.animationDuration = `${currentPipeSpeed}s`;
+
+    // Reduz o tempo de pulo proporcionalmente para manter a jogabilidade justa
+    // Se o cano tá mais rápido, o Godzilla precisa cair mais rápido
+    currentJumpDuration = Math.max(350, currentJumpDuration * 0.98);
+
+    // EFEITO 4: Transição de Nível de Ameaça (Cores Dinâmicas)
+    if (score === 100) gameBoard.classList.add('threat-level-1');
+    if (score === 200) gameBoard.classList.add('threat-level-2');
+    if (score === 300) gameBoard.classList.add('threat-level-3');
+    if (score >= 400 && score % 100 === 0) {
+        gameBoard.classList.add('threat-level-max');
+    }
 };
 
-// Configurações e Preparo Pré-Jogo
 const initPrematch = () => {
     pipe.style.animationPlayState = 'paused';
     pipe.style.display = 'none';
@@ -97,9 +113,14 @@ const initPrematch = () => {
     gotengo.style.animationPlayState = 'paused';
     
     kaiju.src = './img/stop.gif';
-    kaiju.style.width = '190px'; // Tamanho padronizado
-
-    // Inicializa placares ocultos
+    kaiju.style.width = '190px';
+    
+    // Reseta filtros de ameaça e velocidades
+    gameBoard.classList.remove('threat-level-1', 'threat-level-2', 'threat-level-3', 'threat-level-max');
+    currentPipeSpeed = 1.6;
+    currentJumpDuration = 550;
+    pipe.style.animationDuration = `${currentPipeSpeed}s`;
+    
     updateHighscore();
 };
 
@@ -117,50 +138,65 @@ const resumeAnimations = () => {
     superX.style.animationPlayState = 'running';
     gotengo.style.animationPlayState = 'running';
     
+    // Adiciona classe para ativar animações dependentes de estado (Sirene, Cinzas)
+    gameBoard.classList.add('is-playing');
+    
     somAndando.play().catch(() => {});
 
-    // Ativa HUD
     scoreBoard.style.display = 'flex';
     icon.style.display = 'block';
     scores.style.display = 'block';
     highscores.style.display = 'block';
     
-    // Listeners
     document.addEventListener('keydown', jump);
     document.addEventListener('touchstart', jump);
 };
 
-// Loop de Jogo Principal (Refatorado & Sem Stuttering)
+// Loop de Jogo Principal (AABB Hitbox)
 const gameLoop = () => {
     if (!isGameStarted) return;
 
-    const pipePosition = pipe.offsetLeft;
-    const kaijuPosition = Number(window.getComputedStyle(kaiju).bottom.replace('px', ''));
+    const kaijuRect = kaiju.getBoundingClientRect();
+    const pipeRect = pipe.getBoundingClientRect();
 
-    // Detecção Fina de Colisão (Hitbox ajustada para melhor gameplay!)
-    // O cano/obstáculo precisa estar entre 45px e 200px da esquerda e o Kaiju abaixo de 68px de altura
-    if (pipePosition <= 200 && pipePosition > 45 && kaijuPosition < 68) {
+    const kHitbox = {
+        left: kaijuRect.left + (kaijuRect.width * 0.30),  
+        right: kaijuRect.right - (kaijuRect.width * 0.15), 
+        top: kaijuRect.top + (kaijuRect.height * 0.10),    
+        bottom: kaijuRect.bottom - 10                      
+    };
+
+    const pHitbox = {
+        left: pipeRect.left + 5,
+        right: pipeRect.right - 5,
+        top: pipeRect.top + 5,
+        bottom: pipeRect.bottom
+    };
+
+    if (
+        kHitbox.right > pHitbox.left &&
+        kHitbox.left < pHitbox.right &&
+        kHitbox.bottom > pHitbox.top &&
+        kHitbox.top < pHitbox.bottom
+    ) {
         isGameOver = true;
         
-        // Tremor de tela dramático ao colidir
         gameBoard.classList.add('shake');
+        gameBoard.classList.remove('is-playing'); 
 
-        // Congela movimentos na hora
         pipe.style.animation = 'none';
-        pipe.style.left = `${pipePosition}px`;
-        kaiju.style.animation = 'none';
-        kaiju.style.bottom = `${kaijuPosition}px`;
+        pipe.style.left = `${pipeRect.left - gameBoard.getBoundingClientRect().left}px`;
         
-        // Ativa classe no container para aplicar blur & opacidade nos secundários via CSS (combate a aglomeração)
+        kaiju.style.animation = 'none';
+        kaiju.style.bottom = `${window.innerHeight - kaijuRect.bottom}px`; 
+        
         gameBoard.classList.add('game-over');
 
         kaiju.src = './img/game-over.png';
         kaiju.style.width = '200px';
 
-        // Mostra a Overlay de GameOver e oculta elementos dinâmicos
         gameOverScreen.style.display = 'flex';
 
-        // Sons & Músicas de Derrota
         somAndando.pause();
         bgm.pause();
         
@@ -180,7 +216,6 @@ const gameLoop = () => {
     loopId = requestAnimationFrame(gameLoop);
 };
 
-// Iniciar Partida
 startButton.addEventListener('click', () => {
     startScreen.style.display = 'none';
     isGameStarted = true;
@@ -191,11 +226,9 @@ startButton.addEventListener('click', () => {
     bgm.play().catch(() => {});
     rush.pause(); 
     
-    // Começa Loop Sincronizado
     loopId = requestAnimationFrame(gameLoop);
 });
 
-// Reinício Rápido
 const restartGame = () => {
     cancelAnimationFrame(loopId);
     window.location.reload();
@@ -203,5 +236,4 @@ const restartGame = () => {
 
 restartButton.addEventListener('click', restartGame);
 
-// Executa Preparo
 initPrematch();

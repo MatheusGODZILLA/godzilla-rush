@@ -9,7 +9,6 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- Overlay do Fliperama / Container do Jogo -->
     <div class="arcade-wrapper">
         <header>
             <div class="header-content">
@@ -21,20 +20,27 @@
             </div>
         </header>
 
-        <!-- Tabuleiro do Jogo com Filtro de Scanlines CRT -->
-        <div class="game-board">
+        <div class="game-board" id="game-board">
             <div class="crt-scanlines"></div>
             
-            <!-- Cenários & Objetos -->
-            <img src="./img/godzilla.gif" class="kaiju" alt="Godzilla">
-            <img src="./img/pipe.png" class="pipe" alt="Obstáculo">
+            <!-- NOVOS EFEITOS VISUAIS: Sirene e Fagulhas -->
+            <div class="siren-overlay"></div>
+            <div class="ash-particles"></div>
+            
+            <!-- Personagens -->
+            <img src="./img/godzilla.gif" class="kaiju" alt="Godzilla" id="kaiju">
+            <img src="./img/pipe.png" class="pipe" alt="Obstáculo" id="pipe">
+            
+            <!-- Cenário Aéreo e Objetos -->
             <img src="./img/clouds.png" class="clouds" alt="Nuvens">
             <img src="./img/mothra92.gif" class="plane" alt="Mothra">
             <img src="./img/super X2.png" class="superX" alt="Super X2">
-            <img src="./img/sea.png" class="sea" alt="Mar">
             <img src="./img/gotengo (2).png" class="gotengo" alt="Gotengo">
+            
+            <!-- O Mar fixo sobrepondo os pés -->
+            <div class="sea"></div>
 
-            <!-- HUD de Pontuação (Militar/Cyber) -->
+            <!-- HUD -->
             <div class="score-board">
                 <img src="./img/Godzilla-icon.jpg" class="icon" alt="Ícone Godzilla">
                 <div class="score-column">
@@ -43,13 +49,11 @@
                 </div>
             </div>
 
-            <!-- Overlay de Início -->
             <div class="overlay-screen begin" id="start-screen">
                 <img src="./img/preparado.png" class="ready" alt="Preparado?">
                 <button class="btn-retro" id="start-button">INICIAR MISSÃO</button>
             </div>
 
-            <!-- Overlay de Fim de Jogo (Sem aglomeração!) -->
             <div class="overlay-screen game-over-overlay" id="game-over-screen">
                 <div class="defeat-banner">
                     <img src="./img/perdeu.png" class="perdeu" alt="PERDEU">
@@ -65,32 +69,14 @@
     </div>
 
     <!-- Áudios do Jogo -->
-    <audio id="bgm" loop>
-        <source src="./sounds/Raging Waters.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="somAndando" loop>
-        <source src="./sounds/godzilla_step.wav" type="audio/mpeg">
-    </audio>
-    <audio id="gameover">
-        <source src="./sounds/Game Over.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="collide">
-        <source src="./sounds/gigan_hit.wav" type="audio/mpeg">
-    </audio>
-    <audio id="fly">
-        <source src="./sounds/varan_hit.wav" type="audio/mpeg">
-    </audio>
-    <audio id="fall">
-        <source src="./sounds/explosion.wav" type="audio/mpeg">
-    </audio>
-    <audio id="pain">
-        <source src="./sounds/pain.wav" type="audio/mpeg">
-    </audio>
-    <audio id="record">
-        <source src="./sounds/record.wav" type="audio/mpeg">
-    </audio>
-    <audio id="rush">
-        <source src="./sounds/Vs. Game Win.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bgm" loop><source src="./sounds/Raging Waters.mp3" type="audio/mpeg"></audio>
+    <audio id="somAndando" loop><source src="./sounds/godzilla_step.wav" type="audio/mpeg"></audio>
+    <audio id="gameover"><source src="./sounds/Game Over.mp3" type="audio/mpeg"></audio>
+    <audio id="collide"><source src="./sounds/gigan_hit.wav" type="audio/mpeg"></audio>
+    <audio id="fly"><source src="./sounds/varan_hit.wav" type="audio/mpeg"></audio>
+    <audio id="fall"><source src="./sounds/explosion.wav" type="audio/mpeg"></audio>
+    <audio id="pain"><source src="./sounds/pain.wav" type="audio/mpeg"></audio>
+    <audio id="record"><source src="./sounds/record.wav" type="audio/mpeg"></audio>
+    <audio id="rush"><source src="./sounds/Vs. Game Win.mp3" type="audio/mpeg"></audio>
 </body>
 </html>

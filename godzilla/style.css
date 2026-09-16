@@ -34,7 +34,6 @@ body {
     padding: 1rem;
 }
 
-/* Moldura Arcade/Fliperama Ajustada para Telas Maiores */
 .arcade-wrapper {
     width: 95vw;
     max-width: 1400px;
@@ -49,7 +48,6 @@ body {
     position: relative;
 }
 
-/* Header Estilo Cyber/Militar */
 header {
     background: rgba(13, 20, 35, 0.9);
     border: 2px solid var(--panel-border);
@@ -73,11 +71,7 @@ header img.logo {
     filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.3));
 }
 
-header nav {
-    display: flex;
-    gap: 15px;
-}
-
+header nav { display: flex; gap: 15px; }
 header nav a {
     font-family: var(--font-cyber);
     font-weight: 700;
@@ -92,14 +86,11 @@ header nav a {
     transition: all 0.3s ease;
     background: rgba(0, 229, 255, 0.05);
 }
+header nav a:hover { background: var(--atomic-blue); color: #030307; box-shadow: 0 0 15px var(--atomic-blue); }
 
-header nav a:hover {
-    background: var(--atomic-blue);
-    color: #030307;
-    box-shadow: 0 0 15px var(--atomic-blue);
-}
-
-/* Tabuleiro Do Jogo - Altura Dinâmica Baseada na Tela */
+/* ------------------------------------------------ */
+/* CENÁRIO (ESTÁTICO) E TRANSIÇÃO DE AMEAÇA         */
+/* ------------------------------------------------ */
 .game-board {
     width: 100%;
     height: 60vh;
@@ -113,9 +104,15 @@ header nav a:hover {
     background-size: cover;
     background-position: center bottom;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
+    transition: filter 2s ease-in-out; /* Suaviza a troca de cor do nível de ameaça */
 }
 
-/* Efeito CRT Retro Scanlines */
+/* Filtros Dinâmicos aplicados via JS */
+.threat-level-1 { filter: hue-rotate(-15deg) saturate(1.2); }
+.threat-level-2 { filter: hue-rotate(-30deg) saturate(1.4); }
+.threat-level-3 { filter: hue-rotate(-50deg) saturate(1.8) contrast(1.1); }
+.threat-level-max { filter: hue-rotate(-75deg) saturate(2.5) contrast(1.2) drop-shadow(0 0 10px red); }
+
 .crt-scanlines {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -126,28 +123,107 @@ header nav a:hover {
     opacity: 0.75;
 }
 
-/* Obstáculos & Personagens */
+/* O Mar Fixo para esconder os pés */
+.sea {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    min-height: 100px;
+    max-height: 180px; /* Mais baixo para não cobrir tanto */
+    z-index: 10; /* Acima do Kaiju(6) e Obstáculo(5) */
+    background-image: url('./img/sea.png');
+    background-size: 100% 100%; /* Estica para preencher a largura e altura definidas */
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    pointer-events: none;
+}
+
+/* ------------------------------------------------ */
+/* NOVOS EFEITOS CINEMATOGRÁFICOS                   */
+/* ------------------------------------------------ */
+
+/* Efeito de Sirene (Siren Pulse) */
+.siren-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, transparent 30%, rgba(255, 0, 0, 0.3) 100%);
+    z-index: 14; /* Abaixo das scanlines, acima de tudo */
+    pointer-events: none;
+    opacity: 0;
+}
+.game-board.is-playing .siren-overlay {
+    animation: siren-pulse 2s infinite ease-in-out;
+}
+@keyframes siren-pulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Fagulhas / Chuva de Cinzas (Shadow Particles) */
+.ash-particles {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    z-index: 9;
+    pointer-events: none;
+    /* Sombras mágicas gerando dezenas de fagulhas em posições aleatórias */
+    box-shadow: 
+        100px 50px 2px 0px #ffaa00, 250px 150px 1px 0px #ff3300, 300px 80px 2px 0px #555,
+        450px 200px 3px 0px #ffaa00, 600px 50px 1px 0px #333, 750px 250px 2px 0px #ff4400,
+        900px 120px 1px 0px #666, 1100px 300px 2px 0px #ffaa00, 1300px 90px 1px 0px #ff3300,
+        150px 400px 2px 0px #777, 350px 350px 3px 0px #ffaa00, 550px 420px 1px 0px #ff2200,
+        750px 380px 2px 0px #444, 950px 450px 1px 0px #ffaa00, 1250px 400px 2px 0px #555,
+        50px 220px 1px 0px #ffaa00, 850px 100px 3px 0px #ff4400, 1050px 200px 1px 0px #333,
+        1500px 350px 2px 0px #ffaa00, 1400px 50px 1px 0px #ff3300, 1600px 250px 2px 0px #555;
+}
+/* Camada duplicada para fluidez contínua */
+.ash-particles::after {
+    content: "";
+    position: absolute;
+    top: -600px;
+    left: 0;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: inherit;
+}
+.game-board.is-playing .ash-particles {
+    animation: ash-fall 12s linear infinite;
+}
+@keyframes ash-fall {
+    0% { transform: translateY(-50px) translateX(0); }
+    100% { transform: translateY(600px) translateX(-100px); }
+}
+
+/* Micro-tremor de Pouso */
+.landing-shake {
+    animation: land-bump 0.15s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes land-bump {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+    100% { transform: translateY(0); }
+}
+
+/* ------------------------------------------------ */
+/* PERSONAGENS E OBJETOS                            */
+/* ------------------------------------------------ */
 .pipe {
     position: absolute;
     bottom: 0;
     width: 60px;
-    animation: pipe-animation 1.6s infinite linear;
+    animation-name: pipe-animation;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
     animation-play-state: paused;
-    z-index: 3;
+    z-index: 5;
     display: none;
     filter: drop-shadow(0 0 5px rgba(255, 51, 68, 0.3));
-}
-
-.sea {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 25vh;
-    min-height: 150px;
-    max-height: 250px;
-    z-index: 4;
-    opacity: 0.85;
-    pointer-events: none;
 }
 
 .kaiju {
@@ -155,15 +231,21 @@ header nav a:hover {
     position: absolute;
     bottom: 0;
     left: 40px;
-    z-index: 3;
+    z-index: 6;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.7));
 }
 
 .jump {
-    animation: jump 520ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation-name: jump;
+    animation-fill-mode: forwards;
 }
 
-/* Elementos do Cenário */
+@keyframes jump {
+    0% { bottom: 0px; animation-timing-function: ease-out; }
+    50% { bottom: 250px; animation-timing-function: ease-in; }
+    100% { bottom: 0px; }
+}
+
 .clouds, .plane, .superX, .gotengo {
     position: absolute;
     pointer-events: none;
@@ -182,23 +264,50 @@ header nav a:hover {
 .plane {
     width: 180px;
     top: 10px;
-    animation: plane-animation 45s infinite linear;
-    z-index: 0;
+    animation: plane-bobbing 35s infinite linear;
+    z-index: 1;
 }
 
 .superX {
     width: 80px;
     top: 35px;
-    animation: plane-animation 26s infinite linear;
-    z-index: 1;
+    animation: superx-bobbing 22s infinite linear;
+    z-index: 2;
 }
 
 .gotengo {
     width: 260px;
-    animation: ships-animation 35s infinite linear;
+    animation: gotengo-bobbing 30s infinite linear;
     bottom: 80px;
-    z-index: 0;
+    z-index: 1;
 }
+
+@keyframes plane-bobbing {
+    0% { right: -600px; transform: translateY(0); }
+    25% { transform: translateY(15px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-15px); }
+    100% { right: 100%; transform: translateY(0); }
+}
+
+@keyframes superx-bobbing {
+    0% { right: -600px; transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(20px); }
+    100% { right: 100%; transform: translateY(0); }
+}
+
+@keyframes gotengo-bobbing {
+    0% { left: -600px; transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(10px); }
+    100% { left: 100%; transform: translateY(0); }
+}
+
+@keyframes pipe-animation { from { right: -80px; } to { right: 100%; } }
+@keyframes clouds-animation { from { right: -300px; } to { right: 100%; } }
 
 .game-board.game-over .clouds,
 .game-board.game-over .plane,
@@ -209,7 +318,9 @@ header nav a:hover {
     animation-play-state: paused !important;
 }
 
-/* Painel de Pontuação Cyber */
+/* ------------------------------------------------ */
+/* UI E TELAS DE ESTADO                             */
+/* ------------------------------------------------ */
 .score-board {
     position: absolute;
     top: 16px;
@@ -221,7 +332,7 @@ header nav a:hover {
     display: none;
     align-items: center;
     gap: 12px;
-    z-index: 11;
+    z-index: 18;
     box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
 
@@ -232,11 +343,7 @@ header nav a:hover {
     border: 1px solid var(--panel-border);
 }
 
-.score-column {
-    display: flex;
-    flex-direction: column;
-}
-
+.score-column { display: flex; flex-direction: column; }
 .score, .highscore {
     font-family: var(--font-retro);
     font-size: 0.7rem;
@@ -244,18 +351,9 @@ header nav a:hover {
     margin: 2px 0;
     letter-spacing: 1px;
 }
+.score span { color: var(--atomic-blue); text-shadow: 0 0 6px rgba(0, 229, 255, 0.6); }
+.highscore span { color: var(--laser-green); text-shadow: 0 0 6px rgba(57, 255, 20, 0.4); }
 
-.score span {
-    color: var(--atomic-blue);
-    text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
-}
-
-.highscore span {
-    color: var(--laser-green);
-    text-shadow: 0 0 6px rgba(57, 255, 20, 0.4);
-}
-
-/* Telas Sobrepostas (Início e GameOver) */
 .overlay-screen {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -264,50 +362,24 @@ header nav a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 20;
     transition: opacity 0.5s ease;
     padding: 1.5rem;
 }
+.overlay-screen.begin { background: rgba(3, 3, 7, 0.82); }
 
-.overlay-screen.begin {
-    background: rgba(3, 3, 7, 0.82);
-}
+.ready { width: 320px; margin-bottom: 25px; animation: pulse 1.5s infinite ease-in-out; }
 
-.ready {
-    width: 320px;
-    margin-bottom: 25px;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-.game-over-overlay {
-    display: none;
-    background: rgba(5, 5, 10, 0.9);
-    z-index: 12;
-}
-
+.game-over-overlay { display: none; background: rgba(5, 5, 10, 0.9); }
 .defeat-banner {
     transform: scale(0.8);
     animation: stampIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align: center;
     margin-bottom: 25px;
 }
+.perdeu { width: 500px; max-width: 90%; filter: drop-shadow(0 0 15px var(--danger-red)); }
+.cause-text { font-family: var(--font-retro); font-size: 0.6rem; color: var(--danger-red); letter-spacing: 2px; margin-top: 10px; text-shadow: 0 0 10px rgba(255, 51, 68, 0.5); }
 
-.perdeu {
-    width: 500px;
-    max-width: 90%;
-    filter: drop-shadow(0 0 15px var(--danger-red));
-}
-
-.cause-text {
-    font-family: var(--font-retro);
-    font-size: 0.6rem;
-    color: var(--danger-red);
-    letter-spacing: 2px;
-    margin-top: 10px;
-    text-shadow: 0 0 10px rgba(255, 51, 68, 0.5);
-}
-
-/* Botões Retro / Cyber */
 .btn-retro {
     background: rgba(0, 229, 255, 0.08);
     border: 3px solid var(--atomic-blue);
@@ -323,62 +395,16 @@ header nav a:hover {
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 10px rgba(0, 229, 255, 0.15);
     text-shadow: 0 0 5px var(--atomic-blue);
 }
+.btn-retro:hover { background: var(--atomic-blue); color: #030307; box-shadow: 0 0 30px var(--atomic-blue); transform: translateY(-2px); text-shadow: none; }
+.pulse-btn { border-color: var(--danger-red); color: var(--danger-red); box-shadow: 0 0 15px rgba(255, 51, 68, 0.2), inset 0 0 10px rgba(255, 51, 68, 0.15); text-shadow: 0 0 5px var(--danger-red); animation: buttonPulse 1.8s infinite; }
+.pulse-btn:hover { background: var(--danger-red); color: #ffffff; box-shadow: 0 0 35px var(--danger-red); }
 
-.btn-retro:hover {
-    background: var(--atomic-blue);
-    color: #030307;
-    box-shadow: 0 0 30px var(--atomic-blue);
-    transform: translateY(-2px);
-    text-shadow: none;
-}
+footer { display: flex; justify-content: center; }
+.copyright { text-transform: uppercase; font-family: var(--font-retro); font-size: 0.6rem; color: #4b5a75; letter-spacing: 1px; }
+.highlight { color: var(--atomic-blue); text-shadow: 0 0 4px rgba(0, 229, 255, 0.4); }
 
-.pulse-btn {
-    border-color: var(--danger-red);
-    color: var(--danger-red);
-    box-shadow: 0 0 15px rgba(255, 51, 68, 0.2), inset 0 0 10px rgba(255, 51, 68, 0.15);
-    text-shadow: 0 0 5px var(--danger-red);
-    animation: buttonPulse 1.8s infinite;
-}
-
-.pulse-btn:hover {
-    background: var(--danger-red);
-    color: #ffffff;
-    box-shadow: 0 0 35px var(--danger-red);
-}
-
-/* Footer do Arcade */
-footer {
-    display: flex;
-    justify-content: center;
-}
-
-.copyright {
-    text-transform: uppercase;
-    font-family: var(--font-retro);
-    font-size: 0.6rem;
-    color: #4b5a75;
-    letter-spacing: 1px;
-}
-
-.highlight {
-    color: var(--atomic-blue);
-    text-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
-}
-
-/* Animações */
 .shake { animation: screenShake 0.45s cubic-bezier(.36,.07,.19,.97) both; }
 
-@keyframes pipe-animation { from { right: -80px; } to { right: 100%; } }
-@keyframes jump {
-    0% { bottom: 0px; }
-    35% { bottom: 230px; }
-    55% { bottom: 230px; }
-    70% { bottom: 200px; }
-    100% { bottom: 0px; }
-}
-@keyframes plane-animation { from { right: -600px; } to { right: 100%; } }
-@keyframes ships-animation { from { left: -600px; } to { left: 100%; } }
-@keyframes clouds-animation { from { right: -300px; } to { right: 100%; } }
 @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.05); opacity: 1; } }
 @keyframes buttonPulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 25px var(--danger-red), inset 0 0 10px rgba(255, 51, 68, 0.3); } 100% { transform: scale(1); } }
 @keyframes stampIn { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1.0); opacity: 1; } }
@@ -389,12 +415,10 @@ footer {
     40%, 60% { transform: translate3d(6px, 0, 0); }
 }
 
-/* Adaptação Responsiva */
 @media (max-width: 900px) {
     .arcade-wrapper { margin: 10px; padding: 1rem; width: 98vw; }
     .game-board { height: 45vh; min-height: 350px; }
 }
-
 @media (max-width: 768px) {
     header { flex-direction: column; gap: 8px; padding: 0.5rem; }
     .header-content { flex-direction: column; gap: 10px; }
