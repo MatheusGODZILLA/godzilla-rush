@@ -31,16 +31,17 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     background-image: radial-gradient(circle, #090e18 0%, #030307 100%);
+    padding: 1rem;
 }
 
-/* Moldura Arcade/Fliperama */
+/* Moldura Arcade/Fliperama Ajustada para Telas Maiores */
 .arcade-wrapper {
-    width: 100%;
-    max-width: 1100px;
+    width: 95vw;
+    max-width: 1400px;
     background: #0d111d;
     border: 4px solid #1f293d;
     border-radius: 16px;
-    padding: 1rem;
+    padding: 1.5rem;
     box-shadow: 0 0 50px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
     display: flex;
     flex-direction: column;
@@ -98,10 +99,12 @@ header nav a:hover {
     box-shadow: 0 0 15px var(--atomic-blue);
 }
 
-/* Tabuleiro Do Jogo */
+/* Tabuleiro Do Jogo - Altura Dinâmica Baseada na Tela */
 .game-board {
     width: 100%;
-    height: 480px;
+    height: 60vh;
+    min-height: 480px;
+    max-height: 700px;
     border: 3px solid var(--panel-border);
     border-radius: 8px;
     position: relative;
@@ -127,7 +130,7 @@ header nav a:hover {
 .pipe {
     position: absolute;
     bottom: 0;
-    width: 55px;
+    width: 60px;
     animation: pipe-animation 1.6s infinite linear;
     animation-play-state: paused;
     z-index: 3;
@@ -139,14 +142,16 @@ header nav a:hover {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 150px;
+    height: 25vh;
+    min-height: 150px;
+    max-height: 250px;
     z-index: 4;
     opacity: 0.85;
     pointer-events: none;
 }
 
 .kaiju {
-    width: 170px;
+    width: 180px;
     position: absolute;
     bottom: 0;
     left: 40px;
@@ -158,7 +163,7 @@ header nav a:hover {
     animation: jump 520ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Elementos do Cenário (Suaves e Desfocados ao Perder) */
+/* Elementos do Cenário */
 .clouds, .plane, .superX, .gotengo {
     position: absolute;
     pointer-events: none;
@@ -195,7 +200,6 @@ header nav a:hover {
     z-index: 0;
 }
 
-/* Paralisar quando perder */
 .game-board.game-over .clouds,
 .game-board.game-over .plane,
 .game-board.game-over .superX,
@@ -275,10 +279,9 @@ header nav a:hover {
     animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* Tela de Derrota / Game Over - Sem Acúmulo! */
 .game-over-overlay {
     display: none;
-    background: rgba(5, 5, 10, 0.9); /* Escurece bastante o fundo caótico */
+    background: rgba(5, 5, 10, 0.9);
     z-index: 12;
 }
 
@@ -329,11 +332,6 @@ header nav a:hover {
     text-shadow: none;
 }
 
-.btn-retro:active {
-    transform: translateY(1px);
-}
-
-/* Pulsação do Reinício */
 .pulse-btn {
     border-color: var(--danger-red);
     color: var(--danger-red);
@@ -357,7 +355,7 @@ footer {
 .copyright {
     text-transform: uppercase;
     font-family: var(--font-retro);
-    font-size: 0.55rem;
+    font-size: 0.6rem;
     color: #4b5a75;
     letter-spacing: 1px;
 }
@@ -367,17 +365,10 @@ footer {
     text-shadow: 0 0 4px rgba(0, 229, 255, 0.4);
 }
 
-/* Animação de Impacto (Screen Shake) */
-.shake {
-    animation: screenShake 0.45s cubic-bezier(.36,.07,.19,.97) both;
-}
+/* Animações */
+.shake { animation: screenShake 0.45s cubic-bezier(.36,.07,.19,.97) both; }
 
-/* Animações e Keyframes */
-@keyframes pipe-animation {
-    from { right: -80px; }
-    to { right: 100%; }
-}
-
+@keyframes pipe-animation { from { right: -80px; } to { right: 100%; } }
 @keyframes jump {
     0% { bottom: 0px; }
     35% { bottom: 230px; }
@@ -385,38 +376,12 @@ footer {
     70% { bottom: 200px; }
     100% { bottom: 0px; }
 }
-
-@keyframes plane-animation {
-    from { right: -600px; }
-    to { right: 100%; }
-}
-
-@keyframes ships-animation {
-    from { left: -600px; }
-    to { left: 100%; }
-}
-
-@keyframes clouds-animation {
-    from { right: -300px; }
-    to { right: 100%; }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.9; }
-    50% { transform: scale(1.05); opacity: 1; }
-}
-
-@keyframes buttonPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.03); box-shadow: 0 0 25px var(--danger-red), inset 0 0 10px rgba(255, 51, 68, 0.3); }
-    100% { transform: scale(1); }
-}
-
-@keyframes stampIn {
-    0% { transform: scale(0.4); opacity: 0; }
-    100% { transform: scale(1.0); opacity: 1; }
-}
-
+@keyframes plane-animation { from { right: -600px; } to { right: 100%; } }
+@keyframes ships-animation { from { left: -600px; } to { left: 100%; } }
+@keyframes clouds-animation { from { right: -300px; } to { right: 100%; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.05); opacity: 1; } }
+@keyframes buttonPulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 25px var(--danger-red), inset 0 0 10px rgba(255, 51, 68, 0.3); } 100% { transform: scale(1); } }
+@keyframes stampIn { 0% { transform: scale(0.4); opacity: 0; } 100% { transform: scale(1.0); opacity: 1; } }
 @keyframes screenShake {
     10%, 90% { transform: translate3d(-2px, 0, 0); }
     20%, 80% { transform: translate3d(4px, 0, 0); }
@@ -425,17 +390,19 @@ footer {
 }
 
 /* Adaptação Responsiva */
+@media (max-width: 900px) {
+    .arcade-wrapper { margin: 10px; padding: 1rem; width: 98vw; }
+    .game-board { height: 45vh; min-height: 350px; }
+}
+
 @media (max-width: 768px) {
-    .arcade-wrapper { margin: 10px; padding: 0.5rem; }
     header { flex-direction: column; gap: 8px; padding: 0.5rem; }
     .header-content { flex-direction: column; gap: 10px; }
     header nav { gap: 10px; }
     header nav a { font-size: 0.75rem; padding: 4px 8px; }
-    .game-board { height: 320px; }
     .perdeu { width: 300px; }
     .btn-retro { font-size: 0.8rem; padding: 10px 20px; }
     .pipe { width: 45px; }
     .kaiju { width: 110px; }
-    .sea { height: 110px; }
     .clouds, .plane, .superX, .gotengo { display: none !important; }
 }

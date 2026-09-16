@@ -30,17 +30,18 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     background-image: radial-gradient(circle, #090e18 0%, #030307 100%);
+    padding: 1rem;
 }
 
+/* Retângulo ajustado dinamicamente ao monitor */
 .arcade-wrapper {
-    width: 100%;
-    max-width: 900px;
+    width: 90vw;
+    max-width: 1200px;
+    min-height: 80vh;
     background-color: #0d111d;
-    /* Caso queira colocar a imagem de fundo também na tela inicial, descomente a linha abaixo e ajuste o caminho */
-    /* background: url('./img/bg2.png') center/cover no-repeat; */
     border: 4px solid #1f293d;
     border-radius: 16px;
-    padding: 2.5rem;
+    padding: 3rem;
     box-shadow: 0 0 50px rgba(0, 229, 255, 0.15), inset 0 0 50px rgba(0,0,0,0.9);
     display: flex;
     flex-direction: column;
@@ -67,6 +68,8 @@ body {
     align-items: center;
     text-align: center;
     gap: 2rem;
+    height: 100%;
+    justify-content: space-between;
 }
 
 .dev-credits {
@@ -75,7 +78,7 @@ body {
     padding: 8px 16px;
     border-radius: 4px;
     font-family: var(--font-retro);
-    font-size: 0.55rem;
+    font-size: 0.6rem;
     color: var(--atomic-blue);
     letter-spacing: 2px;
     align-self: flex-start;
@@ -90,19 +93,21 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 2.5rem;
     background: var(--panel-bg);
     border: 2px solid var(--panel-border);
     border-radius: 8px;
-    padding: 2.5rem;
+    padding: 3rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     backdrop-filter: blur(5px);
     width: 100%;
+    flex-grow: 1;
+    justify-content: center;
 }
 
 .logo {
     height: auto;
-    max-width: 380px;
+    max-width: 450px;
     filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4));
     animation: float 4s ease-in-out infinite;
 }
@@ -114,7 +119,7 @@ body {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: #fff;
     text-shadow: 0 0 10px var(--atomic-blue), 0 0 20px var(--atomic-blue);
     letter-spacing: 2px;
@@ -122,7 +127,7 @@ h1 {
 }
 
 .mission-text {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: var(--text-primary);
     font-weight: 700;
     letter-spacing: 1px;
@@ -131,19 +136,18 @@ h1 {
 .center-button {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 2rem;
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
-/* Botões Retro / Cyber */
 .btn-retro {
     background: rgba(0, 229, 255, 0.08);
     border: 3px solid var(--atomic-blue);
     color: var(--atomic-blue);
     font-family: var(--font-retro);
-    font-size: 0.85rem;
-    padding: 16px 24px;
+    font-size: 0.95rem;
+    padding: 18px 28px;
     border-radius: 8px;
     cursor: pointer;
     text-transform: uppercase;
@@ -186,32 +190,30 @@ h1 {
 .copyright {
     text-transform: uppercase;
     font-family: var(--font-retro);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     color: #4b5a75;
     letter-spacing: 1px;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 /* Animações */
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes buttonPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); box-shadow: 0 0 25px var(--atomic-blue), inset 0 0 10px rgba(0, 229, 255, 0.3); }
-    100% { transform: scale(1); }
-}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes buttonPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 25px var(--atomic-blue), inset 0 0 10px rgba(0, 229, 255, 0.3); } 100% { transform: scale(1); } }
 
 /* Responsividade */
+@media (max-width: 900px) {
+    .arcade-wrapper { width: 95vw; padding: 2rem; min-height: 70vh;}
+    .logo { max-width: 350px; }
+    h1 { font-size: 2.2rem; }
+}
+
 @media (max-width: 768px) {
     .arcade-wrapper { margin: 15px; padding: 1.5rem; }
     .container { padding: 1.5rem; gap: 1.5rem; }
-    h1 { font-size: 1.6rem; }
-    .mission-text { font-size: 0.9rem; }
+    h1 { font-size: 1.8rem; }
+    .mission-text { font-size: 1rem; }
     .logo { max-width: 250px; }
-    .center-button { flex-direction: column; gap: 1rem; }
+    .center-button { flex-direction: column; gap: 1rem; width: 100%;}
     .btn-retro { width: 100%; font-size: 0.8rem; padding: 14px; }
     .dev-credits { font-size: 0.5rem; align-self: center; }
 }
